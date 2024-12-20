@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: false,
-    trailingSlash: true,
+    trailingSlash: false,
     basePath: process.env.NODE_ENV === 'production' ? '/sakai-react' : '',
     publicRuntimeConfig: {
         contextPath: process.env.NODE_ENV === 'production' ? '/sakai-react' : '',

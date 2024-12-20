@@ -14,6 +14,9 @@ class MyDocument extends Document {
             <Html lang="en">
                 <Head>
                     <link id="theme-css" href={`${contextPath}/themes/lara-light-indigo/theme.css`} rel="stylesheet"></link>
+                    <script src="https://app.midtrans.com/snap/snap.js" data-client-key="Mid-client-el97QKP8jXGBhUCN"></script>
+                    {/* <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-server-tEhXc7DgvrhK9vysgHwMU-bF"></script> */}
+
                 </Head>
                 <body>
                     <Main />

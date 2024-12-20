@@ -7,7 +7,6 @@ import React, { useContext, useEffect, useRef } from 'react';
 import AppFooter from './AppFooter';
 import AppSidebar from './AppSidebar';
 import AppTopbar from './AppTopbar';
-import AppConfig from './AppConfig';
 import { LayoutContext } from './context/layoutcontext';
 import PrimeReact from 'primereact/api';
 
@@ -106,13 +105,13 @@ const Layout = (props) => {
     return (
         <React.Fragment>
             <Head>
-                <title>Sakai by PrimeReact | Free Admin Template for NextJS</title>
+                <title>Cashpay</title>
                 <meta charSet="UTF-8" />
                 <meta name="description" content="The ultimate collection of design-agnostic, flexible and accessible React UI Components." />
                 <meta name="robots" content="index, follow" />
                 <meta name="viewport" content="initial-scale=1, width=device-width" />
                 <meta property="og:type" content="website"></meta>
-                <meta property="og:title" content="Sakai by PrimeReact | Free Admin Template for NextJS"></meta>
+                <meta property="og:title" content="Cashpay Merchant | Dashboard"></meta>
                 <meta property="og:url" content="https://www.primefaces.org/sakai-react"></meta>
                 <meta property="og:description" content="The ultimate collection of design-agnostic, flexible and accessible React UI Components." />
                 <meta property="og:image" content="https://www.primefaces.org/static/social/sakai-nextjs.png"></meta>
@@ -129,7 +128,6 @@ const Layout = (props) => {
                     <div className="layout-main">{props.children}</div>
                     <AppFooter />
                 </div>
-                <AppConfig />
                 <div className="layout-mask"></div>
             </div>
         </React.Fragment>
