@@ -140,6 +140,11 @@ const AppMenu = () => {
                     icon: 'pi pi-fw pi-circle-off',
                     to: '/pages/package'
                 },
+                {
+                    label: 'Reservation',
+                    icon: 'pi pi-fw pi-flag-fill',
+                    to: '/pages/reservation'
+                },
                 {   label: 'Report', 
                     icon: 'pi pi-fw pi-chart-bar', 
                     to: '/pages/charts' 

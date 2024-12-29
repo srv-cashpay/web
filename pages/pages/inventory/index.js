@@ -13,6 +13,7 @@ import { fetchProducts, createProduct,updateExistingProduct, bulkDeleteProducts 
 import { deleteProduct as deleteProductById } from '../inventory/api';
 import ProductCreateDialog from '../inventory/Dialogs/ProductCreateDialog';  // Import komponen MerkDialog
 import ProductUpdateDialog from '../inventory/Dialogs/ProductUpdateDialog';
+import UploadImageDialog from '../inventory/Dialogs/UploadImageDialog';
 import { Badge } from 'primereact/badge';
 
 const Inventory = () => {
@@ -35,6 +36,7 @@ const Inventory = () => {
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
     const [productUpdateDialog, setProductUpdateDialog] = useState(false);
+    const [uploadImageDialog, setProductUploadDialog] = useState(false);
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
     const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
     const [product, setProduct] = useState(emptyProduct);
@@ -95,7 +97,12 @@ const Inventory = () => {
         setSubmitted(false);
         setProductUpdateDialog(true);
     };
-    
+
+    const openUpload = (productData) => {
+        setProduct({ ...productData });
+        setSubmitted(false);
+        setProductUploadDialog(true);
+    };    
 
     const hideDialog = () => {
         setSubmitted(false);
@@ -105,6 +112,11 @@ const Inventory = () => {
     const hideUpdateDialog = () => {
         setSubmitted(false);
         setProductUpdateDialog(false);
+    };
+
+    const hideUploadDialog = () => {
+        setSubmitted(false);
+        setProductUploadDialog(false);
     };
 
     const hideDeleteProductDialog = () => {
@@ -132,6 +144,25 @@ const Inventory = () => {
     const updateProduct = () => {
         updateDataToApi();
     };
+
+    const handleUploadImage = async (file) => {
+        const formData = new FormData();
+        formData.append('image', file);
+    
+        try {
+            const response = await uploadProductImage(product.id, formData);
+            toast.current.show({ severity: 'success', summary: 'Uploaded', detail: response.message, life: 3000 });
+            setProductUploadDialog(false);
+        } catch (error) {
+            toast.current.show({
+                severity: 'error',
+                summary: 'Upload Failed',
+                detail: error.message || 'Error uploading image',
+                life: 3000,
+            });
+        }
+    };
+    
     
     const updateDataToApi = async () => {
         try { 
@@ -252,7 +283,6 @@ const Inventory = () => {
         );
     };
 
-
     const stockBodyTemplate = (rowData) => {
         return (
             <>
@@ -261,6 +291,28 @@ const Inventory = () => {
             </>
         );
     };
+
+    const imageBodyTemplate = (rowData) => {
+        return (
+            <div style={{ textAlign: 'center' }}>
+                {rowData.image && rowData.image.file_path ? (
+                    <img
+                        src={`http://192.168.243.52:2358/${rowData.image.file_path}`}
+                        alt={rowData.product_name}
+                        style={{
+                            width: '70px',
+                            height: '70px',
+                            objectFit: 'cover',
+                            borderRadius: '4px',
+                        }}
+                    />
+                ) : (
+                    <span>No Image</span>
+                )}
+            </div>
+        );
+    };
+    
 
     const priceBodyTemplate = (rowData) => {
         return (
@@ -300,6 +352,7 @@ const Inventory = () => {
     const actionBodyTemplate = (rowData) => {
         return (
             <>
+                <Button icon="pi pi-image" className="p-button-rounded p-button-warning mr-1" onClick={() => openUpload(rowData)} />
                 <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-1" onClick={() => openEdit (rowData)} />
                 <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteProduct(rowData)} />
             </>
@@ -359,6 +412,7 @@ const Inventory = () => {
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
                         <Column field="nomor" header="No" body={nomorBodyTemplate} style={{ width: '5%' }} />
+                        <Column field="image" header="Image" body={imageBodyTemplate} />
                         <Column field="id" header="ID" body={idBodyTemplate} style={{ width: '5%' }} />
                         <Column field="product_name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         <Column field="created_at" header="Date" sortable body={categoryBodyTemplate}></Column>
@@ -397,6 +451,14 @@ const Inventory = () => {
                             setProduct={setProduct}
                             hideDialog={hideUpdateDialog}
                             updateProduct={updateProduct}
+                            submitted={submitted}
+                        />
+                         <UploadImageDialog
+                            visible={uploadImageDialog}
+                            product={product}
+                            setProduct={setProduct}
+                            hideDialog={hideUploadDialog}
+                            onUpload={handleUploadImage} 
                             submitted={submitted}
                         />
 

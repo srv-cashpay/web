@@ -73,106 +73,77 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-// Fungsi untuk mengambil data Merk
-export const fetchMerkData = async () => {
-    try {
-        const response = await axiosInstance.get('/merchant/product/merk');
-        return response.data; // Asumsikan data ada langsung di `data`
-    } catch (error) {
-        console.error('Error fetching Merk data:', error);
-        throw error;
-    }
-};
 
-// Fungsi untuk mengambil data Category
-export const fetchCategoryData = async () => {
+// Fungsi untuk mengambil data Tax
+export const fetchTaxData = async (pagination = { limit: 10, page: 0 }) => {
     try {
-        const response = await axiosInstance.get('/merchant/product/category');
-        return response.data; // Asumsikan data ada langsung di `data`
+        const response = await axiosInstance.get('/merchant/tax/pagination', {
+            params: pagination,
+        });
+        return response.data.rows; // Asumsikan data ada di `rows`
     } catch (error) {
-        console.error('Error fetching Category data:', error);
+        console.error('Error fetching Tax data:', error);
         throw error;
     }
 };
 
 // Fungsi untuk mengambil data produk
-export const fetchProducts = async (paginationData) => {
+export const fetchTaxs = async (paginationData) => {
     try {
-        const response = await axiosInstance.get('/merchant/product/pagination', {
+        const response = await axiosInstance.get('/merchant/tax/pagination', {
             params: paginationData,
         });
         return response.data.data; // Data produk
     } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching taxs:', error);
         throw error;
     }
 };
 
 // Fungsi untuk membuat produk baru
-export const createProduct = async (product) => {
+export const createTax = async (tax) => {
     try {
-        const response = await axiosInstance.post('/merchant/product/create', product);
+        const response = await axiosInstance.post('/merchant/tax/create', tax);
         return response.data; // Respons data
     } catch (error) {
-        console.error('Error creating product:', error);
+        console.error('Error creating tax:', error);
         throw error;
     }
 };
 
 // Fungsi untuk menghapus produk berdasarkan ID
-export const deleteProduct = async (id) => {
+export const deleteTax = async (id) => {
     try {
-        await axiosInstance.delete(`/merchant/product/${id}`);
+        await axiosInstance.delete(`/merchant/tax/${id}`);
     } catch (error) {
-        console.error('Failed to delete product:', error);
+        console.error('Failed to delete tax:', error);
         throw error;
     }
 };
 
 // Fungsi untuk menghapus produk secara bulk
-export const bulkDeleteProducts = async (selectedProductIds) => {
+export const bulkDeleteTaxs = async (selectedTaxIds) => {
     try {
-        await axiosInstance.delete('/merchant/product/bulk-delete', {
-            data: { id: selectedProductIds },
+        await axiosInstance.delete('/merchant/tax/bulk-delete', {
+            data: { id: selectedTaxIds },
         });
     } catch (error) {
-        console.error('Failed to delete selected products:', error);
+        console.error('Failed to delete selected taxs:', error);
         throw error;
     }
 };
 
 // Fungsi untuk memperbarui data produk
-export const updateExistingProduct = async (product) => {
+export const updateExistingTax = async (tax) => {
     try {
-        const response = await axiosInstance.put(`/merchant/product/update/${product.id}`, {
-            product_name: product.product_name,
-            stock: product.stock,
-            minimal_stock: product.minimal_stock,
-            price: product.price,
-            status: product.status,
-            merk: product.merk,
+        const response = await axiosInstance.put(`/merchant/tax/update/${tax.id}`, {
+            tax: tax.tax,
+            description: tax.description,
+            status: tax.status,
         });
         return response.data;
     } catch (error) {
-        console.error('Error updating product:', error);
-        throw error;
-    }
-};
-
-export const uploadImage = async (id, file) => {
-    try {
-        const formData = new FormData();
-        formData.append('image', file);
-
-        const response = await axiosInstance.post(`/merchant/product/upload/${id}`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-
-        return response.data;
-    } catch (error) {
-        console.error('Error uploading image:', error);
+        console.error('Error updating tax:', error);
         throw error;
     }
 };

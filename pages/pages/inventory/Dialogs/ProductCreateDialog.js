@@ -153,6 +153,18 @@ const ProductCreateDialog = ({ visible, product, setProduct, hideDialog, savePro
                 {imagePreview && <img src={imagePreview} alt="Product Preview" width="90" className="ml-3 shadow-2" />}
             </div>
             <div className="field">
+                <label htmlFor="barcode">Barcode</label>
+                <InputText
+                    id="barcode"
+                    value={product.barcode}
+                    onChange={(e) => onInputChange(e, 'barcode')}
+                    required
+                    autoFocus
+                    className={classNames({ 'p-invalid': submitted && !product.barcode })}
+                />
+                {submitted && !product.barcode && <small className="p-invalid">Barcode is required.</small>}
+            </div>
+            <div className="field">
                 <label htmlFor="product_name">Product name</label>
                 <InputText
                     id="product_name"
