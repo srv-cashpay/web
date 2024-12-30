@@ -22,7 +22,7 @@ const LoginPage = () => {
    
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://192.168.243.52:2356/api/auth/login', {
+            const response = await fetch('http://192.168.14.146:2356/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
