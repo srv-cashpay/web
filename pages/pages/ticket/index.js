@@ -12,7 +12,6 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
-import { ProductService } from '../../../demo/service/ProductService';
 import withAuth from '../../../layout/context/withAuth';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -68,7 +67,7 @@ const Ticket = () => {
         const fetchData = async () => {
             try {
                 const token = getTokenFromCookie();
-                const response = await axios.get(`http://localhost:8080/api/v1/employee?page=${paginationData.page}&limit=${paginationData.limit}`, {
+                const response = await axios.get(`http://192.168.14.185:8080/api/v1/employee?page=${paginationData.page}&limit=${paginationData.limit}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -127,7 +126,7 @@ const Ticket = () => {
             const token = getTokenFromCookie();
             
             // Assuming you want to send the `employee` state as the data payload
-            const response = await axios.post(`http://localhost:8080/api/v1/employee`, employee, {
+            const response = await axios.post(`http://192.168.14.185:8080/api/v1/employee`, employee, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

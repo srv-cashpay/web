@@ -3,6 +3,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Dropdown } from 'primereact/dropdown';
+import { Checkbox } from 'primereact/checkbox';
 import QRCode from 'react-qr-code';
 import { fetchMerchantData, updateMerchantData, generateAuthenticatorCode } from '../merchant/api';
 
@@ -13,42 +14,52 @@ const Merchant = () => {
         merchant_name: '',
         address: '',
         city: '',
-        country: null, // Hanya menyimpan kode negara
-        zip: null, // Zip sebagai integer
-        phone: null, // Phone sebagai integer
+        country: null,
+        currency: '',
+        zip: '',
+        phone: '',
     });
+
     const [dropdownItems, setDropdownItems] = useState([]);
     const [signupData, setSignupData] = useState({ email: '', password: '' });
     const [qrCodeValue, setQrCodeValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        // Set predefined dropdown items
+        // Initialize the dropdown items
         setDropdownItems([
             { name: 'Indonesia', code: 1 },
             { name: 'Singapore', code: 2 },
         ]);
-
-        // Fetch merchant data
-        loadMerchantData();
     }, []);
+
+   
+    const handleToggle = (field) => {
+        setMerchantData((prevData) => ({
+            ...prevData,
+            [field]: !prevData[field],
+        }));
+    };
 
     const loadMerchantData = async () => {
         try {
             setIsLoading(true);
-            const data = await fetchMerchantData();
-            if (data.status && data.data.length > 0) {
-                const merchant = data.data[0];
+            const response = await fetchMerchantData();
+            if (response.status && response.data) {
+                const merchant = response.data;
                 setMerchantData({
                     id: merchant.id,
-                    owner_name: merchant.update_by,
+                    owner_name: merchant.update_by, // Mapping 'update_by' as the owner
                     merchant_name: merchant.merchant_name,
                     address: merchant.address,
                     city: merchant.city,
-                    country: merchant.country.code, // Ambil kode negara
-                    zip: parseInt(merchant.zip, 10), // Konversi ke integer
-                    phone: parseInt(merchant.phone, 10), // Konversi ke integer
+                    country: merchant.country, 
+                    currency: merchant.currency,
+                    zip: merchant.zip,
+                    phone: merchant.phone,
                 });
+            } else {
+                alert('Failed to fetch merchant data');
             }
         } catch (error) {
             console.error('Error fetching merchant data:', error);
@@ -56,13 +67,16 @@ const Merchant = () => {
             setIsLoading(false);
         }
     };
-
+    
     const handleChange = (field, value) => {
         setMerchantData((prevData) => ({
             ...prevData,
             [field]: ['zip', 'phone'].includes(field) && value ? value.replace(/\D/g, '') : value,
         }));
     };
+
+   
+
     const handleUpdate = async () => {
         if (!validateForm()) return;
         try {
@@ -147,14 +161,13 @@ const Merchant = () => {
                                 optionLabel="name"
                                 optionValue="code"
                                 placeholder="Select One"
-                                onChange={(e) => handleChange('country', e.value)}
+                                onChange={(e) => handleToggle('country', e.value)}
                             />
                         </div>
                         <div className="field col-12 md:col-3">
                             <label htmlFor="zip">Zip</label>
                             <InputText
                                 id="zip"
-                                type="number"
                                 value={merchantData.zip || ''}
                                 onChange={(e) => handleChange('zip', e.target.value)}
                             />
@@ -168,7 +181,7 @@ const Merchant = () => {
                                 onChange={(e) => handleChange('phone', e.target.value)}
                             />
                         </div>
-                        <Button label={isLoading ? 'Updating...' : 'Update'} onClick={handleUpdate} disabled={isLoading} />
+                       <Button label={isLoading ? 'Updating...' : 'Update'} onClick={handleUpdate} disabled={isLoading} />
                     </div>
                 </div>
             </div>

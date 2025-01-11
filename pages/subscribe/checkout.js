@@ -25,7 +25,7 @@ const Checkout = () => {
             const fetchData = async () => {
                 try {
                     const token = getTokenFromCookie();
-                    const response = await axios.get(`http://localhost:8080/api/v1/package/${code}`, {
+                    const response = await axios.get(`http://192.168.14.185:8080/api/v1/package/${code}`, {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }
@@ -58,7 +58,7 @@ const Checkout = () => {
         try {
             const token = getTokenFromCookie();
 
-            const response = await axios.post('http://localhost:8080/api/v1/payment', paymentData, {
+            const response = await axios.post('http://192.168.14.185:8080/api/v1/payment', paymentData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

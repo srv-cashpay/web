@@ -225,6 +225,15 @@ const Inventory = () => {
         );
     };
 
+    const percentageBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Created By</span>
+                {rowData.tax_percentage}%
+            </>
+        );
+    };
+
     const statusBodyTemplate = (rowData) => {
         return (
             <>
@@ -313,8 +322,8 @@ const Inventory = () => {
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
                         <Column field="nomor" header="No" body={nomorBodyTemplate} style={{ width: '5%' }} />
-
                         <Column field="tax" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="tax_percentage" header="Percentage" sortable body={percentageBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         <Column field="created_by" header="Created By" sortable body={taxBodyTemplate}></Column>
                         <Column field="status" header="Status" body={statusBodyTemplate}></Column>
                         <Column field="action" body={actionBodyTemplate} ></Column>

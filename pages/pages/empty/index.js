@@ -58,7 +58,7 @@ const useFetchFriends = () => {
 
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/v1/employee?page=1&limit=10', {
+                const response = await axios.get('http://192.168.14.185:8080/api/v1/employee?page=1&limit=10', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -148,7 +148,7 @@ const EmptyPage = () => {
 
     const fetchChatHistory = async (senderId, receiverId) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/v1/chat/history?sender_id=${senderId}&receiver_id=${receiverId}`, {
+            const response = await axios.get(`http://192.168.14.185:8080/api/v1/chat/history?sender_id=${senderId}&receiver_id=${receiverId}`, {
                 headers: {
                     Authorization: `Bearer ${Cookies.get('token')}`
                 }

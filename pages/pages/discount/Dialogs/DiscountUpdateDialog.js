@@ -8,17 +8,17 @@ import { RadioButton } from 'primereact/radiobutton';
 const DiscountUpdateDialog = ({ visible, discount, setDiscount, hideDialog, updateDiscount, submitted }) => {
     const onInputChange = (e, name) => {
         let val = (e.target && e.target.value) || '';
-        
-        if (name === 'price') {
-            val = parseInt(val.replace(/[^0-9]/g, '')) || 0; // Hapus karakter selain angka
-            // Batasi harga maksimum hingga 1 miliar
-        if (val > 1000000000) {
-            val = 1000000000;
-        }
-        }
-        
+
         let _discount = { ...discount };
-        _discount[name] = ['stock', 'minimal_stock', 'price'].includes(name) ? parseInt(val) || 0 : val;
+        if (name === 'discount_percentage') {
+            // Parse to float and ensure it's within range
+            const parsedVal = parseFloat(val) || 0;
+            if (parsedVal >= 0 && parsedVal <= 100) {
+                _discount[name] = parsedVal;
+            }
+        } else {
+            _discount[name] = val;
+        }
         setDiscount(_discount);
     };
 
@@ -43,9 +43,23 @@ const DiscountUpdateDialog = ({ visible, discount, setDiscount, hideDialog, upda
                 <InputText id="id" value={discount.id} onChange={(e) => onInputChange(e, 'id')} disabled />
             </div>
             <div className="field">
-                <label htmlFor="discount">Discount Name</label>
-                <InputText id="discount" value={discount.discount} onChange={(e) => onInputChange(e, 'discount')} required autoFocus className={classNames({ 'p-invalid': submitted && !discount.discount })} />
-                {submitted && !discount.discount && <small className="p-invalid">Discount name is required.</small>}
+                <label htmlFor="discount_name">Discount Name</label>
+                <InputText id="discount_name" value={discount.discount_name} onChange={(e) => onInputChange(e, 'discount_name')} required autoFocus className={classNames({ 'p-invalid': submitted && !discount.discount_name })} />
+                {submitted && !discount.discount_name && <small className="p-invalid">Discount name is required.</small>}
+            </div>
+            <div className="field">
+                <label htmlFor="discount_percentage">Discount Percentage</label>
+                <div className="p-inputgroup" style={{ maxWidth: '200px' }}>
+                <InputText id="discount_percentage" 
+                value={discount.discount_percentage} onChange={(e) => onInputChange(e, 'discount_percentage')} 
+                required 
+                        className={classNames({ 'p-invalid': submitted && (discount.discount_percentage < 0 || discount.discount_percentage > 100) })}
+                />
+                <span className="p-inputgroup-addon">%</span>
+                </div>
+                {submitted && (discount.discount_percentage < 0 || discount.discount_percentage > 100) && (
+                    <small className="p-invalid">Discount must be between 0% and 100%.</small>
+                )}
             </div>
             <div className="field" style={{ display: 'flex', gap: '1rem' }}></div>
                         <div className="field">

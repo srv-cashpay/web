@@ -8,20 +8,20 @@ import { RadioButton } from 'primereact/radiobutton';
 const TaxUpdateDialog = ({ visible, tax, setTax, hideDialog, updateTax, submitted }) => {
     const onInputChange = (e, name) => {
         let val = (e.target && e.target.value) || '';
-        
-        if (name === 'price') {
-            val = parseInt(val.replace(/[^0-9]/g, '')) || 0; // Hapus karakter selain angka
-            // Batasi harga maksimum hingga 1 miliar
-        if (val > 1000000000) {
-            val = 1000000000;
-        }
-        }
-        
+
         let _tax = { ...tax };
-        _tax[name] = ['stock', 'minimal_stock', 'price'].includes(name) ? parseInt(val) || 0 : val;
+        if (name === 'tax_percentage') {
+            // Parse to float and ensure it's within range
+            const parsedVal = parseFloat(val) || 0;
+            if (parsedVal >= 0 && parsedVal <= 100) {
+                _tax[name] = parsedVal;
+            }
+        } else {
+            _tax[name] = val;
+        }
         setTax(_tax);
     };
-
+    
     const onStatusChange = (e) => {
         const value = e.value; 
         setTax(prevTax => ({ ...prevTax, status: value }));
@@ -47,6 +47,20 @@ const TaxUpdateDialog = ({ visible, tax, setTax, hideDialog, updateTax, submitte
                 <InputText id="tax" value={tax.tax} onChange={(e) => onInputChange(e, 'tax')} required autoFocus className={classNames({ 'p-invalid': submitted && !tax.tax })} />
                 {submitted && !tax.tax && <small className="p-invalid">Tax name is required.</small>}
             </div>
+            <div className="field">
+                            <label htmlFor="tax_percentage">Tax Percentage</label>
+                            <div className="p-inputgroup" style={{ maxWidth: '200px' }}>
+                            <InputText id="tax_percentage" 
+                            value={tax.tax_percentage} onChange={(e) => onInputChange(e, 'tax_percentage')} 
+                            required 
+                                    className={classNames({ 'p-invalid': submitted && (tax.tax_percentage < 0 || tax.tax_percentage > 100) })}
+                            />
+                            <span className="p-inputgroup-addon">%</span>
+                            </div>
+                            {submitted && (tax.tax_percentage < 0 || tax.tax_percentage > 100) && (
+                                <small className="p-invalid">Tax must be between 0% and 100%.</small>
+                            )}
+                        </div>
             <div className="field" style={{ display: 'flex', gap: '1rem' }}></div>
                         <div className="field">
                             <label htmlFor="description">Description</label>

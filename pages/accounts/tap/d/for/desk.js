@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import withAuth from '../../../../../layout/context/withAuth';
-import Cookies from 'js-cookie';
 import { Toast } from 'primereact/toast';
 import Link from 'next/link';
+import { fetchDashboardData } from '../for/api_desk';
 
 const Desk = () => {
     const [dashboardData, setDashboardData] = useState({
@@ -18,42 +18,11 @@ const Desk = () => {
     });
 
     const toast = useRef(null);
-    const getTokenFromCookie = () => {
-        const token = Cookies.get('token'); // Replace with the correct cookie name
-        return token;
-    };
-  
+
     useEffect(() => {
-        const fetchDashboardData = async () => {
-            const token = getTokenFromCookie();
-        
-            if (!token) {
-                toast.current?.show({
-                    severity: 'warn',
-                    summary: 'Authentication Required',
-                    detail: 'Please log in to access dashboard data.',
-                });
-                return;
-            }
-        
+        const loadDashboardData = async () => {
             try {
-                const response = await fetch('http://localhost:2358/api/dashboard/index', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-            
-                console.log('Response Status:', response.status);
-                if (!response.ok) {
-                    const errorDetail = await response.json();
-                    console.log('Error Details:', errorDetail);
-                    throw new Error(errorDetail.message || 'Failed to fetch dashboard data');
-                }
-            
-                const data = await response.json();
-                console.log('Fetched Data:', data);
+                const data = await fetchDashboardData();
                 setDashboardData(data);
             } catch (error) {
                 console.error('Fetch Error:', error);
@@ -63,27 +32,16 @@ const Desk = () => {
                     detail: error.message || 'Unknown error occurred.',
                 });
             }
-            
         };
-        
 
-        fetchDashboardData();
+        loadDashboardData();
     }, []);
-
-
-    const employeeCountOptions = [
-        { label: '1-5', value: '1-5' },
-        { label: '11-50', value: '11-50' },
-        { label: '51-100', value: '51-100' },
-        { label: '101-250', value: '101-250' }
-    ];
 
     return (
         <div className="grid">
-            
             <div className="col-12 lg:col-6 xl:col-3">
                 <div className="card mb-0">
-                <Toast ref={toast} />
+                    <Toast ref={toast} />
                     <div className="flex justify-content-between mb-3">
                         <div>
                             <span className="block text-500 font-medium mb-3">Orders Finished</span>
@@ -204,46 +162,43 @@ const Desk = () => {
                     <span className="text-500">responded</span>
                 </div>
             </div>
-
             <div className="col-12 xl:col-6">
-    <div className="card">
-        <div className="flex justify-content-between align-items-center mb-5">
-            <h5>Best Selling Products</h5>
-        </div>
-        <ul className="list-none p-0 m-0">
-            {dashboardData.product_percentages &&
-                dashboardData.product_percentages.map((product, index) => (
-                    <li
-                        key={index}
-                        className="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
-                    >
-                        <div>
-                            <span className="text-900 font-medium mr-2 mb-1 md:mb-0">
-                                {product.product_name}
-                            </span>
-                            <div className="mt-1 text-600">Minuman</div>
-                        </div>
-                        <div className="mt-2 md:mt-0 flex align-items-center">
-                            <div
-                                className="surface-300 border-round overflow-hidden w-10rem lg:w-6rem"
-                                style={{ height: '8px' }}
-                            >
-                                <div
-                                    className="bg-orange-500 h-full"
-                                    style={{ width: `${product.percentage}%` }}
-                                />
-                            </div>
-                            <span className="text-orange-500 ml-3 font-medium">
-                                {product.percentage.toFixed(2)}%
-                            </span>
-                        </div>
-                    </li>
-                ))}
-        </ul>
-    </div>
-</div>
-
-
+                <div className="card">
+                    <div className="flex justify-content-between align-items-center mb-5">
+                        <h5>Best Selling Products</h5>
+                    </div>
+                    <ul className="list-none p-0 m-0">
+                        {dashboardData.product_percentages &&
+                            dashboardData.product_percentages.map((product, index) => (
+                                <li
+                                    key={index}
+                                    className="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
+                                >
+                                    <div>
+                                        <span className="text-900 font-medium mr-2 mb-1 md:mb-0">
+                                            {product.product_name}
+                                        </span>
+                                        <div className="mt-1 text-600">Minuman</div>
+                                    </div>
+                                    <div className="mt-2 md:mt-0 flex align-items-center">
+                                        <div
+                                            className="surface-300 border-round overflow-hidden w-10rem lg:w-6rem"
+                                            style={{ height: '8px' }}
+                                        >
+                                            <div
+                                                className="bg-orange-500 h-full"
+                                                style={{ width: `${product.percentage}%` }}
+                                            />
+                                        </div>
+                                        <span className="text-orange-500 ml-3 font-medium">
+                                            {product.percentage.toFixed(2)}%
+                                        </span>
+                                    </div>
+                                </li>
+                            ))}
+                    </ul>
+                </div>
+            </div>
             <div className="col-12 xl:col-6">
                 <div className="card">
                     <div className="flex align-items-center justify-content-between mb-4">

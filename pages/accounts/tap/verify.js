@@ -50,25 +50,30 @@ const VerifyPage = () => {
 
     const handleRegister = async () => {
         const otpCode = otp.join(''); // Gabungkan digit OTP menjadi satu string
-
+    
         if (!token) {
             setNotification({ type: 'error', message: 'Missing token. Please try again.' });
             return;
         }
-
+    
         try {
-            const response = await axios.post(`http://localhost:2356/verify?token=${token}`, { otp: otpCode });
-            if (response.data.success) {
-                setNotification({ type: 'success', message: 'Verification successful!' });
-                router.push('/success'); // Arahkan ke halaman sukses
+            const response = await axios.post(`http://192.168.14.185:2356/verify?token=${token}`, { otp: otpCode });
+    
+            // Cek jika respons berhasil
+            if (response.data.status && response.data.code === 200) {
+                // Gunakan pesan dari API
+                setNotification({ type: 'success', message: response.data.message }); 
+                router.push('/accounts/tap/login'); // Redirect ke login jika berhasil
             } else {
-                setNotification({ type: 'error', message: 'Verification failed. Please try again.' });
+                // Jika tidak sukses, tampilkan pesan error dari API
+                setNotification({ type: 'error', message: response.data.message || 'Verification failed.' });
             }
         } catch (error) {
             console.error('Error verifying OTP:', error);
             setNotification({ type: 'error', message: 'An error occurred. Please try again later.' });
         }
     };
+    
 
     const handleOtpChange = (index, value) => {
         if (value.length > 1 || isNaN(value)) return; // Hanya satu digit angka
@@ -92,7 +97,7 @@ const VerifyPage = () => {
 
         try {
             // Kirim request PUT ke API
-            const response = await axios.put(`http://localhost:2356/resend-otp?token=${token}`);
+            const response = await axios.put(`http://192.168.14.185:2356/resend-otp?token=${token}`);
             if (response.data.success) {
                 setNotification({ type: 'success', message: 'OTP resent successfully.' });
             } else {

@@ -24,7 +24,7 @@ const RequestForgotPassword = () => {
         setNotification({ type: '', message: '' }); // Reset notification
         try {
             const response = await axios.post(
-                'http://localhost:2356/api/auth/request-reset-password',
+                'http://192.168.14.185:2356/api/auth/request-reset-password',
                 { email },
                 {
                     headers: {

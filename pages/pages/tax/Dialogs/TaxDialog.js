@@ -10,6 +10,7 @@ const TaxDialog = ({ visible, onHide, taxData }) => {
             <DataTable value={taxData?.data?.rows || []} responsiveLayout="scroll">
                 <Column field="id" header="ID" />
                 <Column field="tax" header="Nama Tax" />
+                <Column field="tax_percentage" header="Tax Persen" />
             </DataTable>
         </Dialog>
     );

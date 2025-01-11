@@ -9,37 +9,37 @@ import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
-import { fetchDiscounts, createDiscount,updateExistingDiscount, bulkDeleteDiscounts } from './api'; // Pastikan jalur ini sesuai
-import { deleteDiscount as deleteDiscountById } from './api';
-import DiscountCreateDialog from './Dialogs/DiscountCreateDialog';  // Import komponen DiscountDialog
-import DiscountUpdateDialog from './Dialogs/DiscountUpdateDialog';
+import { fetchTables, createTable,updateExistingTable, bulkDeleteTables } from './api'; // Pastikan jalur ini sesuai
+import { deleteTable as deleteTableById } from './api';
+import TableCreateDialog from './Dialogs/TableCreateDialog';  // Import komponen TableDialog
+import TableUpdateDialog from './Dialogs/TableUpdateDialog';
 import { Badge } from 'primereact/badge';
 
 const Inventory = () => {
-    let emptyDiscount = {
+    let emptyTable = {
         id: null,
         user :{
-            discount: '',
+            table: '',
         },
         status: 0,
         description: ''
     }; 
 
-    const [discounts, setDiscounts] = useState(null);
-    const [discountDialog, setDiscountDialog] = useState(false);
-    const [discountUpdateDialog, setDiscountUpdateDialog] = useState(false);
-    const [deleteDiscountDialog, setDeleteDiscountDialog] = useState(false);
-    const [deleteDiscountsDialog, setDeleteDiscountsDialog] = useState(false);
-    const [discount, setDiscount] = useState(emptyDiscount);
-    const [selectedDiscounts, setSelectedDiscounts] = useState(null);
+    const [tables, setTables] = useState(null);
+    const [tableDialog, setTableDialog] = useState(false);
+    const [tableUpdateDialog, setTableUpdateDialog] = useState(false);
+    const [deleteTableDialog, setDeleteTableDialog] = useState(false);
+    const [deleteTablesDialog, setDeleteTablesDialog] = useState(false);
+    const [table, setTable] = useState(emptyTable);
+    const [selectedTables, setSelectedTables] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
     const [rowsPerPage, setRowsPerPage] = useState(10); // Default 10
 
-    const hideDiscountDialog = () => {
-        setShowDiscountDialog(false);
+    const hideTableDialog = () => {
+        setShowTableDialog(false);
     };
     
     const handleRowsPerPageChange = (newRowsPerPage) => {
@@ -59,8 +59,8 @@ const Inventory = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetchDiscounts({ page: paginationData.page, limit: rowsPerPage,  totalPages: paginationData.totalPages});
-                setDiscounts(Array.isArray(response.rows) ? response.rows : []);
+                const response = await fetchTables({ page: paginationData.page, limit: rowsPerPage,  totalPages: paginationData.totalPages});
+                setTables(Array.isArray(response.rows) ? response.rows : []);
 
                 setPaginationData(prev => ({
                     ...prev,
@@ -81,43 +81,43 @@ const Inventory = () => {
    
 
     const openNew = () => {
-        setDiscount(emptyDiscount);
+        setTable(emptyTable);
         setSubmitted(false);
-        setDiscountDialog(true);
+        setTableDialog(true);
     };
 
-    const openEdit = (discountData) => {
-        setDiscount({ ...discountData });
+    const openEdit = (tableData) => {
+        setTable({ ...tableData });
         setSubmitted(false);
-        setDiscountUpdateDialog(true);
+        setTableUpdateDialog(true);
     };
     
 
     const hideDialog = () => {
         setSubmitted(false);
-        setDiscountDialog(false);
+        setTableDialog(false);
     };
 
     const hideUpdateDialog = () => {
         setSubmitted(false);
-        setDiscountUpdateDialog(false);
+        setTableUpdateDialog(false);
     };
 
-    const hideDeleteDiscountDialog = () => {
-        setDeleteDiscountDialog(false);
+    const hideDeleteTableDialog = () => {
+        setDeleteTableDialog(false);
     };
 
-    const hideDeleteDiscountsDialog = () => {
-        setDeleteDiscountsDialog(false);
+    const hideDeleteTablesDialog = () => {
+        setDeleteTablesDialog(false);
     };
 
-    const saveDiscount = () => {
+    const saveTable = () => {
         saveDataToApi();        
     };
 
     const saveDataToApi = async () => {
         try { 
-            const response = await createDiscount(discount);
+            const response = await createTable(table);
             toast.current.show({ severity: 'success', summary: 'Successful', detail: response.message, life: 3000 });
         } catch (error) {
             console.error("Error saving data:", error);
@@ -125,13 +125,13 @@ const Inventory = () => {
         }
     };
 
-    const updateDiscount = () => {
+    const updateTable = () => {
         updateDataToApi();
     };
     
     const updateDataToApi = async () => {
         try { 
-            const response = await updateExistingDiscount(discount); // Gantilah dengan fungsi update yang sesuai
+            const response = await updateExistingTable(table); // Gantilah dengan fungsi update yang sesuai
             toast.current.show({ severity: 'success', summary: 'Updated', detail: response.message, life: 3000 });
         } catch (error) {
             console.error("Error updating data:", error);
@@ -139,22 +139,22 @@ const Inventory = () => {
         }
     };
 
-    const confirmDeleteDiscount = (discount) => {
-        setDiscount(discount);
-        setDeleteDiscountDialog(true);
+    const confirmDeleteTable = (table) => {
+        setTable(table);
+        setDeleteTableDialog(true);
     };
     
-    const deleteDiscount = async () => {
+    const deleteTable = async () => {
         try {
-            await deleteDiscountById(discount.id); // Use the renamed function to delete by id
-            const _discounts = discounts.filter((val) => val.id !== discount.id);
-            setDiscounts(_discounts);
-            setDeleteDiscountDialog(false);
-            setDiscount(emptyDiscount);
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Discount Deleted', life: 3000 });
+            await deleteTableById(table.id); // Use the renamed function to delete by id
+            const _tables = tables.filter((val) => val.id !== table.id);
+            setTables(_tables);
+            setDeleteTableDialog(false);
+            setTable(emptyTable);
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Table Deleted', life: 3000 });
         } catch (error) {
-            console.error("Error deleting discount:", error);
-            toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to delete discount', life: 3000 });
+            console.error("Error deleting table:", error);
+            toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to delete table', life: 3000 });
         }
     };
     
@@ -163,21 +163,21 @@ const Inventory = () => {
     };
 
     const confirmDeleteSelected = () => {
-        setDeleteDiscountsDialog(true);
+        setDeleteTablesDialog(true);
     };
 
-    const bulkDeleteSelectedDiscounts = async () => {
+    const bulkDeleteSelectedTables = async () => {
         try {
-            const selectedDiscountIds = selectedDiscounts.map((discount) => discount.id);
-            await bulkDeleteDiscounts(selectedDiscountIds);
-            const _discounts = discounts.filter((discount) => !selectedDiscountIds.includes(discount.id));
-            setDiscounts(_discounts);
-            setDeleteDiscountsDialog(false);
-            setSelectedDiscounts(null);
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Discounts Deleted', life: 3000 });
+            const selectedTableIds = selectedTables.map((table) => table.id);
+            await bulkDeleteTables(selectedTableIds);
+            const _tables = tables.filter((table) => !selectedTableIds.includes(table.id));
+            setTables(_tables);
+            setDeleteTablesDialog(false);
+            setSelectedTables(null);
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Tables Deleted', life: 3000 });
         } catch (error) {
-            console.error("Error deleting discounts:", error);
-            toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to delete discounts', life: 3000 });
+            console.error("Error deleting tables:", error);
+            toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to delete tables', life: 3000 });
         }
     };    
 
@@ -186,7 +186,7 @@ const Inventory = () => {
             <React.Fragment>
                 <div className="my-2">
                     <Button label="New" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
-                    <Button label="Bulk Delete" icon="pi pi-trash" className="p-button-danger mr-2" onClick={confirmDeleteSelected} disabled={!selectedDiscounts || !selectedDiscounts.length} />
+                    <Button label="Bulk Delete" icon="pi pi-trash" className="p-button-danger mr-2" onClick={confirmDeleteSelected} disabled={!selectedTables || !selectedTables.length} />
             </div>
             </React.Fragment>
         );
@@ -211,22 +211,12 @@ const Inventory = () => {
             }}
             onClick={() => openEdit(rowData)}
         >
-            {rowData.discount_name}
+            {rowData.table}
         </span>
         );
     };
 
-    const discountBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Percent</span>
-                {rowData.discount_percentage}%
-            </>
-        );
-    };
-           
-
-    const createdBodyTemplate = (rowData) => {
+    const tableBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">Created By</span>
@@ -265,14 +255,14 @@ const Inventory = () => {
         return (
             <>
                 <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-1" onClick={() => openEdit (rowData)} />
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteDiscount(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteTable(rowData)} />
             </>
         );
     };
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Manage Discounts</h5>
+            <h5 className="m-0">Manage Tables</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
@@ -280,16 +270,16 @@ const Inventory = () => {
         </div>
     );
 
-    const deleteDiscountDialogFooter = (
+    const deleteTableDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteDiscountDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteDiscount} />
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteTableDialog} />
+            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteTable} />
         </>
     );
-    const deleteDiscountsDialogFooter = (
+    const deleteTablesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteDiscountsDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={bulkDeleteSelectedDiscounts} />
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteTablesDialog} />
+            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={bulkDeleteSelectedTables} />
 
         </>
     );
@@ -311,21 +301,21 @@ const Inventory = () => {
 
                     <DataTable
                        ref={dt}
-                       value={discounts}
-                       selection={selectedDiscounts}
-                       onSelectionChange={(e) => setSelectedDiscounts(e.value)}
+                       value={tables}
+                       selection={selectedTables}
+                       onSelectionChange={(e) => setSelectedTables(e.value)}
                        dataKey="id"
                        className="datatable-responsive"
                        globalFilter={globalFilter}
-                       emptyMessage="No discounts found."
+                       emptyMessage="No tables found."
                        header={header}
                        responsiveLayout="scroll"                   
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
                         <Column field="nomor" header="No" body={nomorBodyTemplate} style={{ width: '5%' }} />
-                        <Column field="discount" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="persent" header="Percent" sortable body={discountBodyTemplate}></Column>
-                        <Column field="created_by" header="Created By" sortable body={createdBodyTemplate}></Column>
+
+                        <Column field="table" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="created_by" header="Created By" sortable body={tableBodyTemplate}></Column>
                         <Column field="status" header="Status" body={statusBodyTemplate}></Column>
                         <Column field="action" body={actionBodyTemplate} ></Column>
                     </DataTable>
@@ -335,7 +325,7 @@ const Inventory = () => {
                         <Button icon="pi pi-angle-left" className="p-button-text" onClick={handlePreviousPage} disabled={paginationData.page === 1} />
                         <span>{`Page ${paginationData.page} of ${paginationData.totalPages }`}</span>
                         <Button icon="pi pi-angle-right" className="p-button-text" onClick={handleNextPage} disabled={paginationData.page === paginationData.totalPages} />
-                        <span>{`Inventory ${paginationData.totalRows } Discounts`}</span>
+                        <span>{`Inventory ${paginationData.totalRows } Tables`}</span>
                     </div>
                                 <Dropdown
                         value={rowsPerPage}
@@ -345,38 +335,38 @@ const Inventory = () => {
                             className="ml-2"
                         />
                 </div>              
-                        <DiscountCreateDialog
-                        visible={discountDialog}
-                        discount={discount}
-                        setDiscount={setDiscount}
+                        <TableCreateDialog
+                        visible={tableDialog}
+                        table={table}
+                        setTable={setTable}
                         hideDialog={hideDialog}
-                        saveDiscount={saveDiscount}
+                        saveTable={saveTable}
                         submitted={submitted}
                         />
-                         <DiscountUpdateDialog
-                            visible={discountUpdateDialog}
-                            discount={discount}
-                            setDiscount={setDiscount}
+                         <TableUpdateDialog
+                            visible={tableUpdateDialog}
+                            table={table}
+                            setTable={setTable}
                             hideDialog={hideUpdateDialog}
-                            updateDiscount={updateDiscount}
+                            updateTable={updateTable}
                             submitted={submitted}
                         />
 
-                    <Dialog visible={deleteDiscountDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteDiscountDialogFooter} onHide={hideDeleteDiscountDialog}>
+                    <Dialog visible={deleteTableDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteTableDialogFooter} onHide={hideDeleteTableDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {discount && (
+                            {table && (
                                 <span>
-                                    Are you sure you want to delete <b>{discount.discount}</b>?
+                                    Are you sure you want to delete <b>{table.table}</b>?
                                 </span>
                             )}
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteDiscountsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteDiscountsDialogFooter} onHide={hideDeleteDiscountsDialog}>
+                    <Dialog visible={deleteTablesDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteTablesDialogFooter} onHide={hideDeleteTablesDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {discount && <span>Are you sure you want to delete the selected discounts?</span>}
+                            {table && <span>Are you sure you want to delete the selected tables?</span>}
                         </div>
                     </Dialog>
                 </div>

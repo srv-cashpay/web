@@ -7,8 +7,6 @@ import { RadioButton } from 'primereact/radiobutton';
 import { InputTextarea } from 'primereact/inputtextarea';
 
 const TaxCreateDialog = ({ visible, tax, setTax, hideDialog, saveTax, submitted }) => {
-    const [imagePreview, setImagePreview] = useState(null); // State to store image preview URL
-    const [imageFile, setImageFile] = useState(null); // State to store the image file for submission
    
     const onStatusChange = (e) => {
         setTax(prevTax => ({
@@ -21,10 +19,17 @@ const TaxCreateDialog = ({ visible, tax, setTax, hideDialog, saveTax, submitted 
         let val = (e.target && e.target.value) || '';
 
         let _tax = { ...tax };
-        _tax[name] = ['stock', 'minimal_stock', 'price'].includes(name) ? parseInt(val) || 0 : val;
+        if (name === 'tax_percentage') {
+            // Parse to float and ensure it's within range
+            const parsedVal = parseFloat(val) || 0;
+            if (parsedVal >= 0 && parsedVal <= 100) {
+                _tax[name] = parsedVal;
+            }
+        } else {
+            _tax[name] = val;
+        }
         setTax(_tax);
     };
-
     const taxDialogFooter = (
         <>
             <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
@@ -39,6 +44,7 @@ const TaxCreateDialog = ({ visible, tax, setTax, hideDialog, saveTax, submitted 
                 <InputText
                     id="tax"
                     value={tax.tax}
+                    placeholder='PPN'
                     onChange={(e) => onInputChange(e, 'tax')}
                     required
                     autoFocus
@@ -46,6 +52,22 @@ const TaxCreateDialog = ({ visible, tax, setTax, hideDialog, saveTax, submitted 
                 />
                 {submitted && !tax.tax && <small className="p-invalid">Tax name is required. Please provide a valid name.</small>}
             </div>
+            <div className="field">
+                            <label htmlFor="tax_percentage">Tax Percentage</label>
+                            <div className="p-inputgroup" style={{ maxWidth: '200px' }}>
+                                <InputText
+                                    id="tax_percentage"
+                                    value={tax.tax_percentage || ''}
+                                    onChange={(e) => onInputChange(e, 'tax_percentage')}
+                                    required
+                                    className={classNames({ 'p-invalid': submitted && (tax.tax_percentage < 0 || tax.tax_percentage > 100) })}
+                                />
+                                <span className="p-inputgroup-addon">%</span>
+                            </div>
+                            {submitted && (tax.tax_percentage < 0 || tax.tax_percentage > 100) && (
+                                <small className="p-invalid">Tax must be between 0% and 100%.</small>
+                            )}
+                        </div>
 
             <div className="field">
                 <label htmlFor="description">Description</label>

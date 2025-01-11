@@ -9,7 +9,8 @@ const DiscountDialog = ({ visible, onHide, discountData }) => {
             {/* Check if discountData is an array and contains rows */}
             <DataTable value={discountData?.data?.rows || []} responsiveLayout="scroll">
                 <Column field="id" header="ID" />
-                <Column field="discount" header="Nama Discount" />
+                <Column field="discount_name" header="Nama Discount" />
+                <Column field="discount_percentage" header="Discount Persen" />
             </DataTable>
         </Dialog>
     );

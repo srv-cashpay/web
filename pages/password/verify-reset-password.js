@@ -21,7 +21,7 @@ const VerifyResetPassword = () => {
 
         try {
             const response = await axios.post(
-                `http://localhost:2356/api/auth/verify-reset?token=${token}`,
+                `http://192.168.14.185:2356/api/auth/verify-reset?token=${token}`,
                 { otp },
                 {
                     headers: {
@@ -56,7 +56,7 @@ const VerifyResetPassword = () => {
 
         try {
             const response = await axios.post(
-                `http://localhost:2356/api/auth/resend-reset?token=${token}`, 
+                `http://192.168.14.185:2356/api/auth/resend-reset?token=${token}`, 
                 { email },
                 {
                     headers: {

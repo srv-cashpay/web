@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 // Membuat instance Axios
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:2358/api',
+    baseURL: 'http://192.168.14.192:2358/api',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -19,7 +19,7 @@ const refreshAuthToken = async () => {
 
     try {
         const response = await axios.post(
-            'http://localhost:2356/api/auth/refresh',
+            'http://192.168.14.192:2356/api/auth/refresh',
             { refresh_token: refreshToken },
             {
                 headers: {
@@ -164,7 +164,7 @@ export const uploadImage = async (id, file) => {
         const formData = new FormData();
         formData.append('image', file);
 
-        const response = await axiosInstance.post(`/merchant/product/upload/${id}`, formData, {
+        const response = await axiosInstance.put(`/merchant/product/upload/${id}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },

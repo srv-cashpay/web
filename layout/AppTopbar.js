@@ -33,7 +33,7 @@ const AppTopbar = forwardRef((props, ref) => {
         const token = getCookie('token'); // Mengambil token dari cookie
 
         try {
-            const response = await fetch('http://localhost:2356/api/logout', {
+            const response = await fetch('http://192.168.14.185:2356/api/logout', {
                 method: 'POST', // Atur metode sesuai kebutuhan API Anda
                 headers: {
                     'Authorization': `Bearer ${token}` // Menggunakan token dari cookie
@@ -83,23 +83,23 @@ const AppTopbar = forwardRef((props, ref) => {
             </button>
 
             <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
-                <button type="button" className="p-link layout-topbar-button">
+                {/* <button type="button" className="p-link layout-topbar-button">
                     <i className="pi pi-calendar"></i>
                     <span>Calendar</span>
-                </button>
-                <Link href="/profile">
+                </button> */}
+                <Link href="/accounts/tap/d/for/profile">
                 <button type="button" className="p-link layout-topbar-button">
                     <i className="pi pi-user"></i>
                     <span>Profile</span>
                 </button>
                 </Link>
 
-                <Link href="/documentation">
+                {/* <Link href="/">
                     <button type="button" className="p-link layout-topbar-button">
                         <i className="pi pi-cog"></i>
                         <span>Settings</span>
                     </button>
-                </Link>
+                </Link> */}
                     <button type="button" className="p-link layout-topbar-button" onClick={handleLogout}>
                         <i className="pi pi-sign-out"></i>
                         <span>Logout</span>

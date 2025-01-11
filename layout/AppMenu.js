@@ -84,27 +84,22 @@ const AppMenu = () => {
                 //     icon: 'pi pi-fw pi-globe',
                 //     to: '/landing'
                 // },
-                // {
-                //     label: 'Auth',
-                //     icon: 'pi pi-fw pi-user',
-                //     items: [
-                //         {
-                //             label: 'Login',
-                //             icon: 'pi pi-fw pi-sign-in',
-                //             to: '/auth/login'
-                //         },
-                //         {
-                //             label: 'Error',
-                //             icon: 'pi pi-fw pi-times-circle',
-                //             to: '/auth/error'
-                //         },
-                //         {
-                //             label: 'Access Denied',
-                //             icon: 'pi pi-fw pi-lock',
-                //             to: '/auth/access'
-                //         }
-                //     ]
-                // },
+                {
+                    label: 'Auth',
+                    icon: 'pi pi-fw pi-user',
+                    items: [
+                        {
+                            label: 'Permision',
+                            icon: 'pi pi-fw pi-sign-in',
+                            to: '/auth/login'
+                        },
+                        {
+                            label: 'Role',
+                            icon: 'pi pi-fw pi-sitemap',
+                            to: '/auth/error'
+                        }
+                    ]
+                },
                 // {
                 //     label: 'Attendance',
                 //     icon: 'pi pi-fw pi-calendar',
@@ -143,7 +138,7 @@ const AppMenu = () => {
                 {
                     label: 'Reservation',
                     icon: 'pi pi-fw pi-flag-fill',
-                    to: '/pages/reservation'
+                    to: '/pages/table'
                 },
                 {   label: 'Report', 
                     icon: 'pi pi-fw pi-chart-bar', 

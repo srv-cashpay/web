@@ -24,7 +24,7 @@ const Documentation = () => {
                         </CodeHighlight>
 
                         <p>
-                            Next step is running the application using the start script and navigate to <b>http://localhost:3000/</b> to view the application. That is it, you may now start with the development of your application using the Sakai
+                            Next step is running the application using the start script and navigate to <b>http://192.168.14.185:3000/</b> to view the application. That is it, you may now start with the development of your application using the Sakai
                             template.
                         </p>
 

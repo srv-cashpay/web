@@ -74,77 +74,76 @@ axiosInstance.interceptors.response.use(
     }
 );
 
-// Fungsi untuk mengambil data Tax
-export const fetchTaxData = async (pagination = { limit: 10, page: 0 }) => {
+// Fungsi untuk mengambil data User
+export const fetchUserData = async (pagination = { limit: 10, page: 0 }) => {
     try {
-        const response = await axiosInstance.get('/merchant/tax/pagination', {
+        const response = await axiosInstance.get('/merchant/user/pagination', {
             params: pagination,
         });
         return response.data.rows; // Asumsikan data ada di `rows`
     } catch (error) {
-        console.error('Error fetching Tax data:', error);
+        console.error('Error fetching User data:', error);
         throw error;
     }
 };
 
 // Fungsi untuk mengambil data produk
-export const fetchTaxs = async (paginationData) => {
+export const fetchUsers = async (paginationData) => {
     try {
-        const response = await axiosInstance.get('/merchant/tax/pagination', {
+        const response = await axiosInstance.get('/merchant/user/pagination', {
             params: paginationData,
         });
         return response.data.data; // Data produk
     } catch (error) {
-        console.error('Error fetching taxs:', error);
+        console.error('Error fetching users:', error);
         throw error;
     }
 };
 
 // Fungsi untuk membuat produk baru
-export const createTax = async (tax) => {
+export const createUser = async (user) => {
     try {
-        const response = await axiosInstance.post('/merchant/tax/create', tax);
+        const response = await axiosInstance.post('/merchant/user/create', user);
         return response.data; // Respons data
     } catch (error) {
-        console.error('Error creating tax:', error);
+        console.error('Error creating user:', error);
         throw error;
     }
 };
 
 // Fungsi untuk menghapus produk berdasarkan ID
-export const deleteTax = async (id) => {
+export const deleteUser = async (id) => {
     try {
-        await axiosInstance.delete(`/merchant/tax/${id}`);
+        await axiosInstance.delete(`/merchant/user/${id}`);
     } catch (error) {
-        console.error('Failed to delete tax:', error);
+        console.error('Failed to delete user:', error);
         throw error;
     }
 };
 
 // Fungsi untuk menghapus produk secara bulk
-export const bulkDeleteTaxs = async (selectedTaxIds) => {
+export const bulkDeleteUsers = async (selectedUserIds) => {
     try {
-        await axiosInstance.delete('/merchant/tax/bulk-delete', {
-            data: { id: selectedTaxIds },
+        await axiosInstance.delete('/merchant/user/bulk-delete', {
+            data: { id: selectedUserIds },
         });
     } catch (error) {
-        console.error('Failed to delete selected taxs:', error);
+        console.error('Failed to delete selected users:', error);
         throw error;
     }
 };
 
 // Fungsi untuk memperbarui data produk
-export const updateExistingTax = async (tax) => {
+export const updateExistingUser = async (user) => {
     try {
-        const response = await axiosInstance.put(`/merchant/tax/update/${tax.id}`, {
-            tax: tax.tax,
-            tax_percentage: tax.tax_percentage,
-            description: tax.description,
-            status: tax.status,
+        const response = await axiosInstance.put(`/merchant/user/update/${user.id}`, {
+            user: user.user,
+            description: user.description,
+            status: user.status,
         });
         return response.data;
     } catch (error) {
-        console.error('Error updating tax:', error);
+        console.error('Error updating user:', error);
         throw error;
     }
 };

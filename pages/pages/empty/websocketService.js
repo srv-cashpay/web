@@ -1,6 +1,6 @@
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
-const WS_URL = "ws://localhost:8080/api/v1/chat/receive"; // URL WebSocket Anda
+const WS_URL = "ws://192.168.14.185:8080/api/v1/chat/receive"; // URL WebSocket Anda
 
 let websocket = null;
 

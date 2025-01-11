@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 // Membuat instance Axios
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:2358/api',
+    baseURL: 'http://192.168.14.185:2358/api',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -19,7 +19,7 @@ const refreshAuthToken = async () => {
 
     try {
         const response = await axios.post(
-            'http://localhost:2356/api/auth/refresh',
+            'http://192.168.14.185:2356/api/auth/refresh',
             { refresh_token: refreshToken },
             {
                 headers: {
@@ -137,7 +137,8 @@ export const bulkDeleteDiscounts = async (selectedDiscountIds) => {
 export const updateExistingDiscount = async (discount) => {
     try {
         const response = await axiosInstance.put(`/merchant/discount/update/${discount.id}`, {
-            discount: discount.discount,
+            discount_name: discount.discount_name,
+            discount_percentage: discount.discount_percentage,
             description: discount.description,
             status: discount.status,
         });

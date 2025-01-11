@@ -1,237 +1,193 @@
-import getConfig from 'next/config';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { FileUpload } from 'primereact/fileupload';
-import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { RadioButton } from 'primereact/radiobutton';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
-import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import withAuth from '../../../layout/context/withAuth';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { Calendar } from 'primereact/calendar';
+import { Dropdown } from 'primereact/dropdown'; 
+import { fetchUsers, createUser,updateExistingUser, bulkDeleteUsers } from './api'; // Pastikan jalur ini sesuai
+import { deleteUser as deleteUserById } from './api';
+import UserCreateDialog from './Dialogs/UserCreateDialog';  // Import komponen UserDialog
+import UserUpdateDialog from './Dialogs/UserUpdateDialog';
+import { Badge } from 'primereact/badge';
 
-const User = () => {
-    let emptyEmployee = {
+const Inventory = () => {
+    let emptyUser = {
         id: null,
         user :{
-            full_name: '',
+            user: '',
         },
-        image: null,
-        description: '',
-        category: null,
-        quantity: 0,
-        status_account: false,
-        salary: '',  // Add this line
-        place_of_birth: '',  // <-- Add this line
-        date_of_birth: null  // <-- Add this line
+        status: 0,
+        description: ''
+    }; 
 
-
-    };
-
-    const [employees, setEmployees] = useState(null);
-    const [employeeDialog, setEmployeeDialog] = useState(false);
-    const [deleteEmployeeDialog, setDeleteEmployeeDialog] = useState(false);
-    const [deleteEmployeesDialog, setDeleteEmployeesDialog] = useState(false);
-    const [employee, setEmployee] = useState(emptyEmployee);
-    const [selectedEmployees, setSelectedEmployees] = useState(null);
+    const [users, setUsers] = useState(null);
+    const [userDialog, setUserDialog] = useState(false);
+    const [userUpdateDialog, setUserUpdateDialog] = useState(false);
+    const [deleteUserDialog, setDeleteUserDialog] = useState(false);
+    const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
+    const [user, setUser] = useState(emptyUser);
+    const [selectedUsers, setSelectedUsers] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
-    const [calendarValue, setCalendarValue] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
-    const contextPath = getConfig().publicRuntimeConfig.contextPath;
+    const [rowsPerPage, setRowsPerPage] = useState(10); // Default 10
 
-    const getTokenFromCookie = () => {
-        const token = Cookies.get('token'); // <-- Replace 'yourCookieName' with the actual name of your cookie
-
-        return token;
+    const hideUserDialog = () => {
+        setShowUserDialog(false);
     };
-
+    
+    const handleRowsPerPageChange = (newRowsPerPage) => {
+        setRowsPerPage(newRowsPerPage);
+        setPaginationData(prev => ({ ...prev, limit: newRowsPerPage, page: 1 })); // Reset ke halaman 1 saat limit berubah
+    };
+    
     const [paginationData, setPaginationData] = useState({
-        page: 0,
-        totalPages: 0,
-        limit: 0,
+        page: 1, // Start from page 1 as per your requirement
+        totaPages: 0,
+        limit: 10, // Default limit to 10
         totalData: 0,
         totalRows: 0,
-        nextPage: 0
-
+        nextPage: 0,
     });
     
-    
-   
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = getTokenFromCookie();
-                const response = await axios.get(`http://localhost:2360/api/product/get}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-    
-                // Update employees and pagination data
-                setEmployees(response.data.data);
-                setPaginationData({
-                    ...paginationData,
-                    totalPages: Math.ceil(response.data.total_data / paginationData.limit),
-                    totalData: response.data.total_data,  // Ambil totalData dari respons
-                    nextPage: response.data.next_page,
-                    totalRows: response.data.total_rows,
-                    limit:response.data.total_data
-                });
-    
+                const response = await fetchUsers({ page: paginationData.page, limit: rowsPerPage,  totalPages: paginationData.totalPages});
+                setUsers(Array.isArray(response.rows) ? response.rows : []);
+
+                setPaginationData(prev => ({
+                    ...prev,
+                    totalPages: response.total_page,  // Ambil total halaman dari respons API
+                    totalData: response.total_data,
+                    totalRows: response.total_rows,
+                    nextPage: response.next_page
+                    
+                }));
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         };
-    
         fetchData();
-    }, [paginationData.page, paginationData.limit]);
+        console.log("Updated Pagination Data:", paginationData);  // Log setiap kali paginationData berubah
 
-  
+    }, [paginationData.page, rowsPerPage, paginationData.totalPages]); 
+   
 
     const openNew = () => {
-        setEmployee(emptyEmployee);
+        setUser(emptyUser);
         setSubmitted(false);
-        setEmployeeDialog(true);
+        setUserDialog(true);
     };
+
+    const openEdit = (userData) => {
+        setUser({ ...userData });
+        setSubmitted(false);
+        setUserUpdateDialog(true);
+    };
+    
 
     const hideDialog = () => {
         setSubmitted(false);
-        setEmployeeDialog(false);
+        setUserDialog(false);
     };
 
-    const hideDeleteEmployeeDialog = () => {
-        setDeleteEmployeeDialog(false);
+    const hideUpdateDialog = () => {
+        setSubmitted(false);
+        setUserUpdateDialog(false);
     };
 
-    const hideDeleteEmployeesDialog = () => {
-        setDeleteEmployeesDialog(false);
+    const hideDeleteUserDialog = () => {
+        setDeleteUserDialog(false);
     };
 
-    const saveEmployee = () => {
-            saveDataToApi();
+    const hideDeleteUsersDialog = () => {
+        setDeleteUsersDialog(false);
+    };
+
+    const saveUser = () => {
+        saveDataToApi();        
     };
 
     const saveDataToApi = async () => {
-        try {
-            const token = getTokenFromCookie();
-            
-            // Assuming you want to send the `employee` state as the data payload
-            const response = await axios.post(`http://localhost:8080/api/v1/employee`, employee, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-    
-            if (response.status === 200) {
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: response.data.message, life: 3000 });
-                // You can update the UI or perform other actions upon successful save
-            }
+        try { 
+            const response = await createUser(user);
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: response.message, life: 3000 });
         } catch (error) {
+            console.error("Error saving data:", error);
             toast.current.show({ severity: 'error', summary: 'Error', detail: error.response.data.meta.message, life: 3000 });
         }
     };
-    
 
-    const editEmployee = (employee) => {
-        setEmployee({ ...employee });
-        setEmployeeDialog(true);
+    const updateUser = () => {
+        updateDataToApi();
     };
-
-    const deleteEmployeeFromApi = async (id) => {
-        try {
-            const token = getTokenFromCookie();
-            
-            // Make a DELETE request to the API
-            const response = await axios.delete(`http://localhost:8080/api/v1/employee/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
     
-            if (response.status === 200) {
-                return { success: true, message: 'Employee deleted successfully' };
-            }
+    const updateDataToApi = async () => {
+        try { 
+            const response = await updateExistingUser(user); // Gantilah dengan fungsi update yang sesuai
+            toast.current.show({ severity: 'success', summary: 'Updated', detail: response.message, life: 3000 });
         } catch (error) {
-            throw error.response.data.meta.message; // Throw the error message
+            console.error("Error updating data:", error);
+            toast.current.show({ severity: 'error', summary: 'Error', detail: error.response?.data?.meta?.message, life: 3000 });
         }
     };
 
-    const confirmDeleteEmployee = (employee) => {
-        setEmployee(employee);
-        setDeleteEmployeeDialog(true);
+    const confirmDeleteUser = (user) => {
+        setUser(user);
+        setDeleteUserDialog(true);
     };
-
-    const deleteEmployee = async () => {
+    
+    const deleteUser = async () => {
         try {
-            await deleteEmployeeFromApi(employee.id);
-            
-            let _employees = employees.filter((val) => val.id !== employee.id);
-            setEmployees(_employees);
-            setDeleteEmployeeDialog(false);
-            setEmployee(emptyEmployee);
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Employee Deleted', life: 3000 });
+            await deleteUserById(user.id); // Use the renamed function to delete by id
+            const _users = users.filter((val) => val.id !== user.id);
+            setUsers(_users);
+            setDeleteUserDialog(false);
+            setUser(emptyUser);
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
         } catch (error) {
-            toast.current.show({ severity: 'error', summary: 'Error', detail: error, life: 3000 });
+            console.error("Error deleting user:", error);
+            toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to delete user', life: 3000 });
         }
     };
-
-
-
+    
     const exportCSV = () => {
         dt.current.exportCSV();
     };
 
     const confirmDeleteSelected = () => {
-        setDeleteEmployeesDialog(true);
+        setDeleteUsersDialog(true);
     };
 
-    const deleteSelectedEmployees = () => {
-        let _employees = employees.filter((val) => !selectedEmployees.includes(val));
-        setEmployees(_employees);
-        setDeleteEmployeesDialog(false);
-        setSelectedEmployees(null);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Employees Deleted', life: 3000 });
-    };
-
-    const onCategoryChange = (e) => {
-        console.log('Radio button clicked:', e.target.value);
-        let _employee = { ...employee };
-        _employee['status_account'] = e.target.value;
-        setEmployee(_employee);
-    };
-
-    const onInputChange = (e, name) => {
-        const val = (e.target && e.target.value) || '';
-        let _employee = { ...employee };
-        _employee[`${name}`] = val;
-
-        setEmployee(_employee);
-    };
-
-    const onInputNumberChange = (e, name) => {
-        const val = e.value || 0;
-        let _employee = { ...employee };
-        _employee[`${name}`] = val;
-
-        setEmployee(_employee);
-    };
+    const bulkDeleteSelectedUsers = async () => {
+        try {
+            const selectedUserIds = selectedUsers.map((user) => user.id);
+            await bulkDeleteUsers(selectedUserIds);
+            const _users = users.filter((user) => !selectedUserIds.includes(user.id));
+            setUsers(_users);
+            setDeleteUsersDialog(false);
+            setSelectedUsers(null);
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Users Deleted', life: 3000 });
+        } catch (error) {
+            console.error("Error deleting users:", error);
+            toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to delete users', life: 3000 });
+        }
+    };    
 
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
                     <Button label="New" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedEmployees || !selectedEmployees.length} />
-                </div>
+                    <Button label="Bulk Delete" icon="pi pi-trash" className="p-button-danger mr-2" onClick={confirmDeleteSelected} disabled={!selectedUsers || !selectedUsers.length} />
+            </div>
             </React.Fragment>
         );
     };
@@ -247,14 +203,20 @@ const User = () => {
 
     const nameBodyTemplate = (rowData) => {
         return (
-            <>
-                <span className="p-column-title">Name</span>
-                {rowData.user.full_name}
-            </>
+            <span
+            style={{
+                cursor: 'pointer',
+                color: 'blue',
+                
+            }}
+            onClick={() => openEdit(rowData)}
+        >
+            {rowData.full_name}
+        </span>
         );
     };
 
-    const categoryBodyTemplate = (rowData) => {
+    const userBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">Created By</span>
@@ -263,37 +225,44 @@ const User = () => {
         );
     };
 
-    const idBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Card ID</span>
-                {rowData.id_card}
-            </>
-        );
-    };
-
     const statusBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">Status</span>
-                {rowData.status_account ? 'active' : 'inactive'}
+                <Badge
+                    value={rowData.status === 1 ? 'Active' : 'Inactive'}
+                    severity={rowData.status === 1 ? 'success' : 'danger'}
+                    className="ml-2"
+                />
             </>
         );
+    };  
+
+    const handleNextPage = () => {
+        setPaginationData(prev => {
+            const nextPage = prev.page + 1;
+            return { ...prev, page: nextPage > prev.totalPages ? prev.totalPages : nextPage };
+        });
     };
-    
+    const handlePreviousPage = () => {
+        setPaginationData(prev => {
+            const previousPage = prev.page - 1;
+            return { ...prev, page: previousPage < 1 ? 1 : previousPage };
+        });
+    };
 
     const actionBodyTemplate = (rowData) => {
         return (
             <>
-                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editEmployee(rowData)} />
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteEmployee(rowData)} />
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-1" onClick={() => openEdit (rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteUser(rowData)} />
             </>
         );
     };
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Manage Employees</h5>
+            <h5 className="m-0">Manage Users</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
@@ -301,24 +270,27 @@ const User = () => {
         </div>
     );
 
-    const employeeDialogFooter = (
+    const deleteUserDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveEmployee} />
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteUserDialog} />
+            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteUser} />
         </>
     );
-    const deleteEmployeeDialogFooter = (
+    const deleteUsersDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteEmployeeDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteEmployee} />
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteUsersDialog} />
+            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={bulkDeleteSelectedUsers} />
+
         </>
     );
-    const deleteEmployeesDialogFooter = (
-        <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteEmployeesDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteSelectedEmployees} />
-        </>
-    );
+
+    const nomorBodyTemplate = (_, { rowIndex }) => {
+        // Calculate the row number based on the current page and rows per page
+        const nomor = (paginationData.page - 1) * rowsPerPage + rowIndex + 1;
+        return (
+            <span>{nomor}</span>
+        );
+    };
 
     return (
         <div className="grid crud-demo">
@@ -328,131 +300,73 @@ const User = () => {
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
-                        ref={dt}
-                        value={employees}
-                        selection={selectedEmployees}
-                        onSelectionChange={(e) => setSelectedEmployees(e.value)}
-                        dataKey="id"
-                        paginator
-                        rows={10}
-                        rowsPerPageOptions={[10, 25, 50]}
-                        className="datatable-responsive"
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        // paginatorTemplate={`FirstPageLink PrevPageLink PageLinks ${(paginationData.limit === 10 && paginationData.nextPage) ? paginationData.nextPage : ''} LastPageLink CurrentPageReport RowsPerPageDropdown`}
-
-                        currentPageReportTemplate={`Showing {first} to {last} of  ${paginationData.totalData} products`}
-                        globalFilter={globalFilter}
-                        emptyMessage="No employees found."
-                        header={header}
-                        responsiveLayout="scroll"
-
+                       ref={dt}
+                       value={users}
+                       selection={selectedUsers}
+                       onSelectionChange={(e) => setSelectedUsers(e.value)}
+                       dataKey="id"
+                       className="datatable-responsive"
+                       globalFilter={globalFilter}
+                       emptyMessage="No users found."
+                       header={header}
+                       responsiveLayout="scroll"                   
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="id" header="Card ID" sortable body={idBodyTemplate} />
-                        <Column field="full_name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="status_account" header="Status" body={statusBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="created_by" header="Created By" sortable body={categoryBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="nomor" header="No" body={nomorBodyTemplate} style={{ width: '5%' }} />
 
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="user" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="created_by" header="Created By" sortable body={userBodyTemplate}></Column>
+                        <Column field="status" header="Status" body={statusBodyTemplate}></Column>
+                        <Column field="action" body={actionBodyTemplate} ></Column>
                     </DataTable>
 
-                    <Dialog visible={employeeDialog} style={{ width: '450px' }} header="Employee Details" modal className="p-fluid" footer={employeeDialogFooter} onHide={hideDialog}>
-                        {employee.image && <img src={`${contextPath}/demo/images/employee/${employee.image}`} alt={employee.image} width="150" className="mt-0 mx-auto mb-5 block shadow-2" />}
-                        <div className="field">
-                            <label htmlFor="full_name">Full name</label>
-                            <InputText id="full_name" value={employee.full_name} onChange={(e) => onInputChange(e, 'full_name')} required autoFocus className={classNames({ 'p-invalid': submitted && !employee.full_name })} />
-                            {submitted && !employee.full_name && <small className="p-invalid">Name is required.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="id_card">ID Card</label>
-                            <InputText id="id_card" value={employee.id_card} onChange={(e) => onInputChange(e, 'id_card')} required autoFocus className={classNames({ 'p-invalid': submitted && !employee.id_card })} />
-                            {submitted && !employee.id_card && <small className="p-invalid">Name is required.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="account_number">Bank Account Number</label>
-                            <InputText id="account_number" value={employee.account_number} onChange={(e) => onInputChange(e, 'account_number')} required autoFocus className={classNames({ 'p-invalid': submitted && !employee.account_number })} />
-                            {submitted && !employee.account_number && <small className="p-invalid">Name is required.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="ktp">Identity Number</label>
-                            <InputText id="ktp" value={employee.ktp} onChange={(e) => onInputChange(e, 'ktp')} required autoFocus className={classNames({ 'p-invalid': submitted && !employee.ktp })} />
-                            {submitted && !employee.ktp && <small className="p-invalid">Name is required.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="salary">Salary</label>
-                            <InputText id="salary" value={employee.salary} onChange={(e) => onInputChange(e, 'salary')} required autoFocus className={classNames({ 'p-invalid': submitted && !employee.salary })} />
-                            {submitted && !employee.salary && <small className="p-invalid">Name is required.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="whatsapp">Whasapp</label>
-                            <InputText id="whatsapp" value={employee.whatsapp} onChange={(e) => onInputChange(e, 'whatsapp')} required autoFocus className={classNames({ 'p-invalid': submitted && !employee.whatsapp })} />
-                            {submitted && !employee.whatsapp && <small className="p-invalid">Name is required.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="place_of_birth">Place of birth</label>
-                            <InputText id="place_of_birth" value={employee.place_of_birth} onChange={(e) => onInputChange(e, 'place_of_birth')} required autoFocus className={classNames({ 'p-invalid': submitted && !employee.place_of_birth })} />
-                            {submitted && !employee.place_of_birth && <small className="p-invalid">Name is required.</small>}
-                        </div>
-                        <div className="field">
-                        <label htmlFor="date_of_birth">Date of birth</label>
-                            <Calendar showIcon showButtonBar id="date_of_birth" value={employee.date_of_birth} onValueChange={(e) => setCalendarValue(e, 'date_of_birth')}  />
-                        </div>
-                        {/* <div className="formgrid grid">
-                            <div className="field col">
-                                <label htmlFor="place_of_birth">Place of birth</label>
-                                <InputText id="place_of_birth" value={employee.place_of_birth} onValueChange={(e) => onInputChange(e, 'place_of_birth')} required autoFocus className={classNames({ 'p-invalid': submitted && !employee.place_of_birth })} />
-                                {submitted && !employee.place_of_birth && <small className="p-invalid">Name is required.</small>}
+                    <div className="paginator-buttons" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div className="flex justify-content-between align-items-center">
+                        <Button icon="pi pi-angle-left" className="p-button-text" onClick={handlePreviousPage} disabled={paginationData.page === 1} />
+                        <span>{`Page ${paginationData.page} of ${paginationData.totalPages }`}</span>
+                        <Button icon="pi pi-angle-right" className="p-button-text" onClick={handleNextPage} disabled={paginationData.page === paginationData.totalPages} />
+                        <span>{`Inventory ${paginationData.totalRows } Users`}</span>
+                    </div>
+                                <Dropdown
+                        value={rowsPerPage}
+                        options={[10, 25, 50]} // Opsi untuk jumlah baris per halaman
+                            onChange={(e) => handleRowsPerPageChange(e.value)} // Panggil fungsi ketika nilai dropdown diubah
+                            placeholder="Rows per page"
+                            className="ml-2"
+                        />
+                </div>              
+                        <UserCreateDialog
+                        visible={userDialog}
+                        user={user}
+                        setUser={setUser}
+                        hideDialog={hideDialog}
+                        saveUser={saveUser}
+                        submitted={submitted}
+                        />
+                         <UserUpdateDialog
+                            visible={userUpdateDialog}
+                            user={user}
+                            setUser={setUser}
+                            hideDialog={hideUpdateDialog}
+                            updateUser={updateUser}
+                            submitted={submitted}
+                        />
 
-                            </div>
-                            <div className="field col">
-                                <label htmlFor="date_of_birth">Date of birth</label>
-                                <Calendar showIcon showButtonBar name="date_of_birth" id="date_of_birth" value={employee.date_of_birth} onValueChange={(e) => setCalendarValue(e, 'date_of_birth')} required autoFocus className={classNames({ 'p-invalid': submitted && !employee.date_of_birth })} />
-                            </div>
-                        </div> */}
-                        <div className="field">
-                            <label htmlFor="address">Address</label>
-                            <InputTextarea id="address" value={employee.address} onChange={(e) => onInputChange(e, 'address')} required rows={3} cols={20} autoFocus className={classNames({ 'p-invalid': submitted && !employee.address })} />
-                        </div>
-                        <div className="field">
-                            <label className="mb-3">User Account</label>
-                            <div className="formgrid grid">
-                                <div className="field-radiobutton col-6">
-                                   <RadioButton inputId="status_account1" name="status_account" value={true} onChange={onCategoryChange} checked={employee.status_account === true} />
-                                    <label htmlFor="status_account1">Active</label>
-                                </div>
-                                <div className="field-radiobutton col-6">
-                                    <RadioButton inputId="status_account2" name="status_account" value={false} onChange={onCategoryChange} checked={employee.status_account === false} />
-                                    <label htmlFor="status_account2">Non Active</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="field">
-                            <label htmlFor="email">Email</label>
-                            <InputText id="email" value={employee.user.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !employee.email })} />
-                            {submitted && !employee.email && <small className="p-invalid">Name is required.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="password">Password</label>
-                            <InputText id="password" value={employee.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ 'p-invalid': submitted && !employee.password })} />
-                            {submitted && !employee.password && <small className="p-invalid">Name is required.</small>}
-                        </div>
-                    </Dialog>
-
-                    <Dialog visible={deleteEmployeeDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteEmployeeDialogFooter} onHide={hideDeleteEmployeeDialog}>
+                    <Dialog visible={deleteUserDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteUserDialogFooter} onHide={hideDeleteUserDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {employee && (
+                            {user && (
                                 <span>
-                                    Are you sure you want to delete <b>{employee.full_name}</b>?
+                                    Are you sure you want to delete <b>{user.user}</b>?
                                 </span>
                             )}
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteEmployeesDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteEmployeesDialogFooter} onHide={hideDeleteEmployeesDialog}>
+                    <Dialog visible={deleteUsersDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteUsersDialogFooter} onHide={hideDeleteUsersDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {employee && <span>Are you sure you want to delete the selected employees?</span>}
+                            {user && <span>Are you sure you want to delete the selected users?</span>}
                         </div>
                     </Dialog>
                 </div>
@@ -461,4 +375,4 @@ const User = () => {
     );
 };
 
-export default withAuth(User);
+export default withAuth(Inventory);

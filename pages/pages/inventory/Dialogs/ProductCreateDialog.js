@@ -142,16 +142,6 @@ const ProductCreateDialog = ({ visible, product, setProduct, hideDialog, savePro
 
     return (
         <Dialog visible={visible} style={{ width: '600px' }} header="Product Details" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialogHandler}>
-            <div className="field" style={{ display: 'flex', alignItems: 'center' }}>
-                <label htmlFor="image" style={{ marginRight: '10px' }}>Product Image</label>
-                <input
-                    type="file"
-                    id="image"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                />
-                {imagePreview && <img src={imagePreview} alt="Product Preview" width="90" className="ml-3 shadow-2" />}
-            </div>
             <div className="field">
                 <label htmlFor="barcode">Barcode</label>
                 <InputText
