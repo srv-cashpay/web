@@ -1,0 +1,18 @@
+{
+    "sourceFile": "pages/pages/table/Dialogs/TableUpdateDialog.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1736822016635,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1736822016635,
+            "name": "Commit-0",
+            "content": "import React from 'react';\r\nimport { Dialog } from 'primereact/dialog';\r\nimport { Button } from 'primereact/button';\r\nimport { InputText } from 'primereact/inputtext';\r\nimport { classNames } from 'primereact/utils';\r\nimport { RadioButton } from 'primereact/radiobutton';\r\n\r\nconst TableUpdateDialog = ({ visible, table, setTable, hideDialog, updateTable, submitted }) => {\r\n    const onInputChange = (e, name) => {\r\n        let val = (e.target && e.target.value.trim()); // Trim spasi di awal/akhir\r\n        \r\n        if (name === 'price') {\r\n            val = parseInt(val.replace(/[^0-9]/g, '')) || 0; // Hapus karakter selain angka\r\n            // Batasi harga maksimum hingga 1 miliar\r\n        if (val > 1000000000) {\r\n            val = 1000000000;\r\n        }\r\n        }\r\n        \r\n        let _table = { ...table };\r\n        _table[name] = ['stock', 'minimal_stock', 'price'].includes(name) ? parseInt(val) || 0 : val;\r\n        setTable(_table);\r\n    };\r\n\r\n    const onStatusChange = (e) => {\r\n        const value = e.value; \r\n        setTable(prevTable => ({ ...prevTable, status: value }));\r\n    };\r\n\r\n    const tableDialogFooter = (\r\n        <>\r\n            <Button label=\"Cancel\" icon=\"pi pi-times\" className=\"p-button-text\" onClick={hideDialog} />\r\n            <Button label=\"Update\" icon=\"pi pi-check\" className=\"p-button-text\" onClick={updateTable} />\r\n        </>\r\n    );\r\n\r\n    return (\r\n        <Dialog visible={visible} style={{ width: '450px' }} header=\"Update Table\" modal className=\"p-fluid\" footer={tableDialogFooter} onHide={hideDialog}>\r\n            {table.image && <img src={`${table.image}`} alt={table.image} width=\"150\" className=\"mt-0 mx-auto mb-5 block shadow-2\" />}\r\n            \r\n            <div className=\"field\">\r\n                <label htmlFor=\"id\">Table ID</label>\r\n                <InputText id=\"id\" value={table.id} onChange={(e) => onInputChange(e, 'id')} disabled />\r\n            </div>\r\n            <div className=\"field\">\r\n                <label htmlFor=\"table\">Table Name</label>\r\n                <InputText id=\"table\" value={table.table} onChange={(e) => onInputChange(e, 'table')} required autoFocus className={classNames({ 'p-invalid': submitted && !table.table })} />\r\n                {submitted && !table.table && <small className=\"p-invalid\">Table name is required.</small>}\r\n            </div>\r\n            <div className=\"field\" style={{ display: 'flex', gap: '1rem' }}></div>\r\n                        <div className=\"field\">\r\n                            <label htmlFor=\"description\">Description</label>\r\n                            <InputText id=\"description\" value={table.description} onChange={(e) => onInputChange(e, 'description')} required autoFocus className={classNames({ 'p-invalid': submitted && !table.description })} />\r\n                            {submitted && !table.price && <small className=\"p-invalid\">Name is required.</small>}\r\n                        </div>            \r\n        </Dialog>\r\n    );\r\n};\r\n\r\nexport default TableUpdateDialog;\r\n"
+        }
+    ]
+}

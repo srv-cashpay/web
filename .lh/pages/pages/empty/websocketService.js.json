@@ -1,0 +1,18 @@
+{
+    "sourceFile": "pages/pages/empty/websocketService.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1736741923679,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1736741923679,
+            "name": "Commit-0",
+            "content": "import { w3cwebsocket as W3CWebSocket } from \"websocket\";\r\n\r\nconst WS_URL = \"ws://192.168.14.248:8080/api/v1/chat/receive\"; // URL WebSocket Anda\r\n\r\nlet websocket = null;\r\n\r\nconst connect = () => {\r\n  websocket = new W3CWebSocket(WS_URL);\r\n\r\n  websocket.onopen = () => {\r\n    console.log(\"WebSocket Client Connected\");\r\n  };\r\n\r\n  websocket.onmessage = (message) => {\r\n    const dataFromServer = JSON.parse(message.data);\r\n    // Handle data received from the server here\r\n    console.log('Received data:', dataFromServer);\r\n  };\r\n\r\n  websocket.onclose = () => {\r\n    console.log(\"WebSocket Client Disconnected\");\r\n    setTimeout(connect, 5000); // Reconnect after 5 seconds\r\n  };\r\n};\r\n\r\nconnect();\r\n\r\nexport const sendWebSocketMessage = (message) => {\r\n  if (websocket && websocket.readyState === websocket.OPEN) {\r\n    websocket.send(JSON.stringify(message));\r\n  }\r\n};"
+        }
+    ]
+}
