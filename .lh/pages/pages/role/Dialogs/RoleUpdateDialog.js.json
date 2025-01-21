@@ -1,0 +1,18 @@
+{
+    "sourceFile": "pages/pages/role/Dialogs/RoleUpdateDialog.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1736922847800,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1736922847800,
+            "name": "Commit-0",
+            "content": "import React from 'react';\r\nimport { Dialog } from 'primereact/dialog';\r\nimport { Button } from 'primereact/button';\r\nimport { InputText } from 'primereact/inputtext';\r\nimport { classNames } from 'primereact/utils';\r\nimport { RadioButton } from 'primereact/radiobutton';\r\n\r\nconst RoleUpdateDialog = ({ visible, role, setRole, hideDialog, updateRole, submitted }) => {\r\n    const onInputChange = (e, name) => {\r\n        let val = (e.target && e.target.value) || '';\r\n        \r\n        if (name === 'price') {\r\n            val = parseInt(val.replace(/[^0-9]/g, '')) || 0; // Hapus karakter selain angka\r\n            // Batasi harga maksimum hingga 1 miliar\r\n        if (val > 1000000000) {\r\n            val = 1000000000;\r\n        }\r\n        }\r\n        \r\n        let _role = { ...role };\r\n        _role[name] = ['stock', 'minimal_stock', 'price'].includes(name) ? parseInt(val) || 0 : val;\r\n        setRole(_role);\r\n    };\r\n\r\n    const onStatusChange = (e) => {\r\n        const value = e.value; \r\n        setRole(prevRole => ({ ...prevRole, status: value }));\r\n    };\r\n\r\n    const roleDialogFooter = (\r\n        <>\r\n            <Button label=\"Cancel\" icon=\"pi pi-times\" className=\"p-button-text\" onClick={hideDialog} />\r\n            <Button label=\"Update\" icon=\"pi pi-check\" className=\"p-button-text\" onClick={updateRole} />\r\n        </>\r\n    );\r\n\r\n    return (\r\n        <Dialog visible={visible} style={{ width: '450px' }} header=\"Update Role\" modal className=\"p-fluid\" footer={roleDialogFooter} onHide={hideDialog}>\r\n            {role.image && <img src={`${role.image}`} alt={role.image} width=\"150\" className=\"mt-0 mx-auto mb-5 block shadow-2\" />}\r\n            \r\n            <div className=\"field\">\r\n                <label htmlFor=\"id\">Role ID</label>\r\n                <InputText id=\"id\" value={role.id} onChange={(e) => onInputChange(e, 'id')} disabled />\r\n            </div>\r\n            <div className=\"field\">\r\n                <label htmlFor=\"role\">Role Name</label>\r\n                <InputText id=\"role\" value={role.role} onChange={(e) => onInputChange(e, 'role')} required autoFocus className={classNames({ 'p-invalid': submitted && !role.role })} />\r\n                {submitted && !role.role && <small className=\"p-invalid\">Role name is required.</small>}\r\n            </div>  \r\n        </Dialog>\r\n    );\r\n};\r\n\r\nexport default RoleUpdateDialog;\r\n"
+        }
+    ]
+}

@@ -3,11 +3,27 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 4,
             "patches": [
                 {
                     "date": 1736741923719,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1736904173567,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -79,9 +79,9 @@\n \r\n // Fungsi untuk mengambil data merchant\r\n export const fetchMerchantData = async () => {\r\n     try {\r\n-        const response = await axiosInstance.get('/sidebar');\r\n+        const response = await axiosInstance.get('/permission');\r\n         return response.data;\r\n     } catch (error) {\r\n         console.error('Error fetching merchant data:', error);\r\n         throw error;\r\n"
+                },
+                {
+                    "date": 1736918712867,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -80,9 +80,9 @@\n // Fungsi untuk mengambil data merchant\r\n export const fetchMerchantData = async () => {\r\n     try {\r\n         const response = await axiosInstance.get('/permission');\r\n-        return response.data;\r\n+        return response;\r\n     } catch (error) {\r\n         console.error('Error fetching merchant data:', error);\r\n         throw error;\r\n     }\r\n"
+                },
+                {
+                    "date": 1736918723049,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -80,9 +80,9 @@\n // Fungsi untuk mengambil data merchant\r\n export const fetchMerchantData = async () => {\r\n     try {\r\n         const response = await axiosInstance.get('/permission');\r\n-        return response;\r\n+        return response.data;\r\n     } catch (error) {\r\n         console.error('Error fetching merchant data:', error);\r\n         throw error;\r\n     }\r\n"
+                },
+                {
+                    "date": 1737433479595,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,12 +4,13 @@\n const API_BASE_URL = 'http://192.168.14.248:2358/api/merchant';\r\n \r\n // Mendapatkan token dari cookie\r\n const getTokenFromCookie = () => Cookies.get('token');\r\n+const getRefreshTokenFromCookie = () => Cookies.get('refresh_token');\r\n \r\n // Fungsi untuk merefresh token\r\n const refreshAuthToken = async () => {\r\n-    const refreshToken = Cookies.get('refresh_token'); // Mengambil refresh token dari cookie\r\n+    const refreshToken = getRefreshTokenFromCookie(); \r\n     if (!refreshToken) throw new Error('No refresh token available');\r\n \r\n     try {\r\n         const response = await axios.post(\r\n@@ -17,12 +18,12 @@\n             { refresh_token: refreshToken },\r\n             {\r\n                 headers: {\r\n                     'x-api-key': '3f=Pr#g1@RU-nw=30', // Header tambahan jika diperlukan\r\n+                    'Authorization': `Bearer ${refreshToken}`\r\n                 },\r\n             }\r\n         );\r\n-\r\n         if (response.data && response.data.data.access_token) {\r\n             const newToken = response.data.data.access_token;\r\n             Cookies.set('token', newToken); // Menyimpan token baru ke cookie\r\n             return newToken; // Mengembalikan token baru\r\n"
                 }
             ],
             "date": 1736741923719,

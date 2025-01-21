@@ -3,11 +3,23 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1736741923672,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1737020464712,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,8 +13,9 @@\n const getTokenFromCookie = () => Cookies.get('token');\r\n \r\n // Fungsi untuk merefresh token\r\n const refreshAuthToken = async () => {\r\n+    const token = getTokenFromCookie();\r\n     const refreshToken = Cookies.get('refresh_token'); // Ambil refresh token dari cookies\r\n     if (!refreshToken) throw new Error('No refresh token available');\r\n \r\n     try {\r\n@@ -23,8 +24,9 @@\n             { refresh_token: refreshToken },\r\n             {\r\n                 headers: {\r\n                     'x-api-key': '3f=Pr#g1@RU-nw=30', // Tambahkan header x-api-key\r\n+                    'Authorization': `Bearer ${token}`\r\n                 },\r\n             }\r\n         );\r\n         \r\n"
+                },
+                {
+                    "date": 1737097135118,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,9 +13,8 @@\n const getTokenFromCookie = () => Cookies.get('token');\r\n \r\n // Fungsi untuk merefresh token\r\n const refreshAuthToken = async () => {\r\n-    const token = getTokenFromCookie();\r\n     const refreshToken = Cookies.get('refresh_token'); // Ambil refresh token dari cookies\r\n     if (!refreshToken) throw new Error('No refresh token available');\r\n \r\n     try {\r\n@@ -24,9 +23,8 @@\n             { refresh_token: refreshToken },\r\n             {\r\n                 headers: {\r\n                     'x-api-key': '3f=Pr#g1@RU-nw=30', // Tambahkan header x-api-key\r\n-                    'Authorization': `Bearer ${token}`\r\n                 },\r\n             }\r\n         );\r\n         \r\n"
+                },
+                {
+                    "date": 1737434184368,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,21 +10,23 @@\n });\r\n \r\n // Fungsi untuk mendapatkan token dari cookies\r\n const getTokenFromCookie = () => Cookies.get('token');\r\n+const getRefreshTokenFromCookie = () => Cookies.get('refresh_token');\r\n \r\n // Fungsi untuk merefresh token\r\n const refreshAuthToken = async () => {\r\n-    const refreshToken = Cookies.get('refresh_token'); // Ambil refresh token dari cookies\r\n+    const refreshToken = getRefreshTokenFromCookie(); \r\n     if (!refreshToken) throw new Error('No refresh token available');\r\n \r\n     try {\r\n         const response = await axios.post(\r\n             'http://192.168.14.248:2356/api/auth/refresh',\r\n             { refresh_token: refreshToken },\r\n             {\r\n                 headers: {\r\n-                    'x-api-key': '3f=Pr#g1@RU-nw=30', // Tambahkan header x-api-key\r\n+                    'x-api-key': '3f=Pr#g1@RU-nw=30', // Header tambahan jika diperlukan\r\n+                    'Authorization': `Bearer ${refreshToken}`\r\n                 },\r\n             }\r\n         );\r\n         \r\n"
                 }
             ],
             "date": 1736741923672,

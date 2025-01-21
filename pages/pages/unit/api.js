@@ -11,10 +11,11 @@ const axiosInstance = axios.create({
 
 // Fungsi untuk mendapatkan token dari cookies
 const getTokenFromCookie = () => Cookies.get('token');
+const getRefreshTokenFromCookie = () => Cookies.get('refresh_token');
 
 // Fungsi untuk merefresh token
 const refreshAuthToken = async () => {
-    const refreshToken = Cookies.get('refresh_token'); // Ambil refresh token dari cookies
+    const refreshToken = getRefreshTokenFromCookie(); 
     if (!refreshToken) throw new Error('No refresh token available');
 
     try {
@@ -23,11 +24,11 @@ const refreshAuthToken = async () => {
             { refresh_token: refreshToken },
             {
                 headers: {
-                    'x-api-key': '3f=Pr#g1@RU-nw=30', // Tambahkan header x-api-key
+                    'x-api-key': '3f=Pr#g1@RU-nw=30', // Header tambahan jika diperlukan
+                    'Authorization': `Bearer ${refreshToken}`
                 },
             }
         );
-        
         if (response.data && response.data.data.access_token) {
             const newToken = response.data.data.access_token;
             Cookies.set('token', newToken); // Simpan token baru di cookies

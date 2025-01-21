@@ -1,0 +1,18 @@
+{
+    "sourceFile": "pages/pages/role/Dialogs/UserDialog.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1736922734892,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1736922734892,
+            "name": "Commit-0",
+            "content": "import React from 'react';\r\nimport { Dialog } from 'primereact/dialog';\r\nimport { DataTable } from 'primereact/datatable';\r\nimport { Column } from 'primereact/column';\r\n\r\nconst RoleDialog = ({ visible, onHide, RoleData }) => {\r\n    return (\r\n        <Dialog visible={visible} style={{ width: '50vw' }} header=\"Daftar Role\" modal onHide={onHide}>\r\n            {/* Check if RoleData is an array and contains rows */}\r\n            <DataTable value={RoleData?.data?.rows || []} responsiveLayout=\"scroll\">\r\n                <Column field=\"id\" header=\"ID\" />\r\n                <Column field=\"Role\" header=\"Nama Role\" />\r\n            </DataTable>\r\n        </Dialog>\r\n    );\r\n};\r\n\r\nexport default RoleDialog;\r\n"
+        }
+    ]
+}

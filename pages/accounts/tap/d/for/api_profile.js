@@ -5,19 +5,21 @@ const API_BASE_URL = 'http://192.168.14.248:2356/api'; // Pastikan base URL sesu
 
 // Helper function to get the token from cookies
 const getTokenFromCookie = () => Cookies.get('token');
+const getRefreshTokenFromCookie = () => Cookies.get('refresh_token');
 
-// Function to refresh auth token
+// Fungsi untuk merefresh token
 const refreshAuthToken = async () => {
-    const refreshToken = Cookies.get('refresh_token'); // Retrieve refresh token
+    const refreshToken = getRefreshTokenFromCookie(); 
     if (!refreshToken) throw new Error('No refresh token available');
 
     try {
         const response = await axios.post(
-            `${API_BASE_URL}/auth/refresh`,
+            'http://192.168.14.248:2356/api/auth/refresh',
             { refresh_token: refreshToken },
             {
                 headers: {
-                    'x-api-key': '3f=Pr#g1@RU-nw=30', // Additional headers if required
+                    'x-api-key': '3f=Pr#g1@RU-nw=30', // Header tambahan jika diperlukan
+                    'Authorization': `Bearer ${refreshToken}`
                 },
             }
         );
