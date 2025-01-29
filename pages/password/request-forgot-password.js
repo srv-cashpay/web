@@ -50,7 +50,7 @@ const RequestForgotPassword = () => {
     };
 
     const handleLoginError = async (response) => {
-        const errorMessage = response?.data?.meta?.message || response?.data?.error || 'An error occurred.';
+        const errorMessage = response.data.meta.message || response.data.error || 'An error occurred.';
         setNotification({ type: 'error', message: errorMessage });
     };
 
