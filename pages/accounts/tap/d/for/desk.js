@@ -26,7 +26,7 @@ const Desk = () => {
                 setDashboardData(data);
             } catch (error) {
                 console.error('Fetch Error:', error);
-                toast.current?.show({
+                toast.current.show({
                     severity: 'error',
                     summary: 'Error Fetching Data',
                     detail: error.message || 'Unknown error occurred.',
