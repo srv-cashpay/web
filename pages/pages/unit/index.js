@@ -133,7 +133,7 @@ const Inventory = () => {
             toast.current.show({ severity: 'success', summary: 'Updated', detail: response.message, life: 3000 });
         } catch (error) {
             console.error("Error updating data:", error);
-            toast.current.show({ severity: 'error', summary: 'Error', detail: error.response?.data?.meta?.message, life: 3000 });
+            toast.current.show({ severity: 'error', summary: 'Error', detail: error.response.data.meta.message, life: 3000 });
         }
     };
 
