@@ -46,7 +46,11 @@ const VerifyResetPassword = () => {
     };
 
     const handleVerifyError = async (response) => {
+<<<<<<< HEAD
         const errorMessage = response.data.meta.message || response.data.error || 'Verification failed.';
+=======
+        const errorMessage = response.data.meta.message || response?.data?.error || 'Verification failed.';
+>>>>>>> 5d62ccc8800630bf10a0b63a1c38d4a0afe417af
         setNotification({ type: 'error', message: errorMessage });
     };
 
