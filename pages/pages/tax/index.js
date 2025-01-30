@@ -9,8 +9,8 @@ import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
-import { fetchTaxs, createTax,updateExistingTax, bulkDeleteTaxs } from './api'; // Pastikan jalur ini sesuai
-import { deleteTax as deleteTaxById } from './api';
+import { fetchTaxs, createTax,updateExistingTax, bulkDeleteTaxs } from '../../../services/tax/api'; // Pastikan jalur ini sesuai
+import { deleteTax as deleteTaxById } from '../../../services/tax/api';
 import TaxCreateDialog from './Dialogs/TaxCreateDialog';  // Import komponen TaxDialog
 import TaxUpdateDialog from './Dialogs/TaxUpdateDialog';
 import { Badge } from 'primereact/badge';
@@ -135,7 +135,7 @@ const Inventory = () => {
             toast.current.show({ severity: 'success', summary: 'Updated', detail: response.message, life: 3000 });
         } catch (error) {
             console.error("Error updating data:", error);
-            toast.current.show({ severity: 'error', summary: 'Error', detail: error.response?.data?.meta?.message, life: 3000 });
+            toast.current.show({ severity: 'error', summary: 'Error', detail: error.response.data.meta.message, life: 3000 });
         }
     };
 

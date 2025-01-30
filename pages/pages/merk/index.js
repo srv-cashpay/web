@@ -9,8 +9,8 @@ import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
-import { fetchMerks, createMerk,updateExistingMerk, bulkDeleteMerks } from './api'; // Pastikan jalur ini sesuai
-import { deleteMerk as deleteMerkById } from './api';
+import { fetchMerks, createMerk,updateExistingMerk, bulkDeleteMerks } from '../../../services/merk/api'; // Pastikan jalur ini sesuai
+import { deleteMerk as deleteMerkById } from '../../../services/merk/api';
 import MerkCreateDialog from './Dialogs/MerkCreateDialog';  // Import komponen MerkDialog
 import MerkUpdateDialog from './Dialogs/MerkUpdateDialog';
 import { Badge } from 'primereact/badge';
@@ -135,7 +135,7 @@ const Inventory = () => {
             toast.current.show({ severity: 'success', summary: 'Updated', detail: response.message, life: 3000 });
         } catch (error) {
             console.error("Error updating data:", error);
-            toast.current.show({ severity: 'error', summary: 'Error', detail: error.response?.data?.meta?.message, life: 3000 });
+            toast.current.show({ severity: 'error', summary: 'Error', detail: error.response.data.meta.message, life: 3000 });
         }
     };
 

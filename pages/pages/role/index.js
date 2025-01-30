@@ -9,8 +9,8 @@ import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
-import { fetchRoles, createRole,updateExistingRole, bulkDeleteRoles } from './api'; // Pastikan jalur ini sesuai
-import { deleteRole as deleteRoleById } from './api';
+import { fetchRoles, createRole,updateExistingRole, bulkDeleteRoles } from '../../../services/role/api'; // Pastikan jalur ini sesuai
+import { deleteRole as deleteRoleById } from '../../../services/role/api';
 import RoleCreateDialog from './Dialogs/RoleCreateDialog';  // Import komponen RoleDialog
 import RoleUpdateDialog from './Dialogs/RoleUpdateDialog';
 import { Badge } from 'primereact/badge';
@@ -133,7 +133,7 @@ const Inventory = () => {
             toast.current.show({ severity: 'success', summary: 'Updated', detail: response.message, life: 3000 });
         } catch (error) {
             console.error("Error updating data:", error);
-            toast.current.show({ severity: 'error', summary: 'Error', detail: error.response?.data?.meta?.message, life: 3000 });
+            toast.current.show({ severity: 'error', summary: 'Error', detail: error.response.data.meta.message, life: 3000 });
         }
     };
 

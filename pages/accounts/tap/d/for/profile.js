@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
-import { fetchProfileData, updateProfile } from './api_profile';
+import { fetchProfileData, updateProfile } from './../../../../../services/auth/api_profile';
 
 const Profile = () => {
     const [profileData, setProfileData] = useState(null);

@@ -9,8 +9,8 @@ import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
-import { fetchPermissions, createPermission,updateExistingPermission, bulkDeletePermissions } from './api'; // Pastikan jalur ini sesuai
-import { deletePermission as deletePermissionById } from './api';
+import { fetchPermissions, createPermission,updateExistingPermission, bulkDeletePermissions } from '../../../services/permission/api'; // Pastikan jalur ini sesuai
+import { deletePermission as deletePermissionById } from '../../../services/permission/api';
 import PermissionCreateDialog from './Dialogs/PermissionCreateDialog';  // Import komponen PermissionDialog
 import PermissionUpdateDialog from './Dialogs/PermissionUpdateDialog';
 import { Badge } from 'primereact/badge';
@@ -134,7 +134,7 @@ const Inventory = () => {
             toast.current.show({ severity: 'success', summary: 'Updated', detail: response.message, life: 3000 });
         } catch (error) {
             console.error("Error updating data:", error);
-            toast.current.show({ severity: 'error', summary: 'Error', detail: error.response?.data?.meta?.message, life: 3000 });
+            toast.current.show({ severity: 'error', summary: 'Error', detail: error.response.data.meta.message, life: 3000 });
         }
     };
 

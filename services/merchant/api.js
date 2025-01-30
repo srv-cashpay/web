@@ -3,7 +3,6 @@ import Cookies from 'js-cookie';
 
 const API_BASE_URL = 'http://192.168.14.248:2358/api/merchant';
 
-// Mendapatkan token dari cookie
 const getTokenFromCookie = () => Cookies.get('token');
 const getRefreshTokenFromCookie = () => Cookies.get('refresh_token');
 
@@ -23,10 +22,11 @@ const refreshAuthToken = async () => {
                 },
             }
         );
+
         if (response.data && response.data.data.access_token) {
             const newToken = response.data.data.access_token;
-            Cookies.set('token', newToken); // Menyimpan token baru ke cookie
-            return newToken; // Mengembalikan token baru
+            Cookies.set('token', newToken); // Simpan token baru di cookie
+            return newToken; // Kembalikan token baru
         } else {
             throw new Error('Invalid response structure');
         }
@@ -36,7 +36,7 @@ const refreshAuthToken = async () => {
     }
 };
 
-// Membuat instance axios dengan interceptor
+// Buat instance axios dengan interceptor
 const axiosInstance = axios.create({
     baseURL: API_BASE_URL,
     headers: {
@@ -64,9 +64,9 @@ axiosInstance.interceptors.response.use(
             console.warn('Token expired. Attempting to refresh...');
             try {
                 const newToken = await refreshAuthToken();
-                // Menyisipkan token baru pada header request yang gagal
+                // Set ulang token ke header dari request yang gagal
                 error.config.headers.Authorization = `Bearer ${newToken}`;
-                // Mengulangi request asli
+                // Ulangi request asli
                 return axiosInstance.request(error.config);
             } catch (refreshError) {
                 console.error('Failed to refresh token:', refreshError);
@@ -78,13 +78,41 @@ axiosInstance.interceptors.response.use(
     }
 );
 
-// Fungsi untuk mengambil data merchant
+// Fetch merchant data
 export const fetchMerchantData = async () => {
     try {
-        const response = await axiosInstance.get('/permission');
+        const response = await axiosInstance.get('/get');
         return response.data;
     } catch (error) {
         console.error('Error fetching merchant data:', error);
         throw error;
     }
+};
+
+// Update merchant data
+export const updateMerchantData = async (merchantData) => {
+    try {
+        const response = await axiosInstance.put(`/update?id=${merchantData.id}`, merchantData);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating merchant data:', error);
+        throw error;
+    }
+};
+
+// Tambah user kasir
+export const addCashier = async (cashierData) => {
+    try {
+        const response = await axiosInstance.post('/auth/signup', cashierData);
+        return response.data;
+    } catch (error) {
+        console.error('Error adding cashier:', error);
+        throw error;
+    }
+};
+
+// Generate Authenticator QR Code
+export const generateAuthenticatorCode = (merchantName) => {
+    const secret = Math.random().toString(36).substring(2, 15); // Random secret
+    return `otpauth://totp/${merchantName}?secret=${secret}&issuer=YourApp`;
 };

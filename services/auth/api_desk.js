@@ -1,9 +1,9 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_BASE_URL = 'http://192.168.14.248:2358/api/merchant';
+const API_BASE_URL = 'http://192.168.14.248:2358/api';
 
-// Mendapatkan token dari cookie
+// Helper function to get the token from cookies
 const getTokenFromCookie = () => Cookies.get('token');
 const getRefreshTokenFromCookie = () => Cookies.get('refresh_token');
 
@@ -23,6 +23,7 @@ const refreshAuthToken = async () => {
                 },
             }
         );
+
         if (response.data && response.data.data.access_token) {
             const newToken = response.data.data.access_token;
             Cookies.set('token', newToken); // Menyimpan token baru ke cookie
@@ -78,13 +79,13 @@ axiosInstance.interceptors.response.use(
     }
 );
 
-// Fungsi untuk mengambil data merchant
-export const fetchMerchantData = async () => {
+// Function to fetch dashboard data
+export const fetchDashboardData = async () => {
     try {
-        const response = await axiosInstance.get('/permission');
+        const response = await axiosInstance.get('/dashboard/index');
         return response.data;
     } catch (error) {
-        console.error('Error fetching merchant data:', error);
+        console.error('Error fetching dashboard data:', error);
         throw error;
     }
 };

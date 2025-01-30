@@ -1,9 +1,9 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_BASE_URL = 'http://192.168.14.248:2358/api/merchant';
+const API_BASE_URL = 'http://192.168.14.248:2356/api'; // Pastikan base URL sesuai
 
-// Mendapatkan token dari cookie
+// Helper function to get the token from cookies
 const getTokenFromCookie = () => Cookies.get('token');
 const getRefreshTokenFromCookie = () => Cookies.get('refresh_token');
 
@@ -23,10 +23,11 @@ const refreshAuthToken = async () => {
                 },
             }
         );
+
         if (response.data && response.data.data.access_token) {
             const newToken = response.data.data.access_token;
-            Cookies.set('token', newToken); // Menyimpan token baru ke cookie
-            return newToken; // Mengembalikan token baru
+            Cookies.set('token', newToken); // Store new token in cookies
+            return newToken; // Return the new token
         } else {
             throw new Error('Invalid response structure');
         }
@@ -36,7 +37,7 @@ const refreshAuthToken = async () => {
     }
 };
 
-// Membuat instance axios dengan interceptor
+// Create an axios instance with interceptors
 const axiosInstance = axios.create({
     baseURL: API_BASE_URL,
     headers: {
@@ -44,7 +45,7 @@ const axiosInstance = axios.create({
     },
 });
 
-// Interceptor untuk menyisipkan token pada setiap request
+// Request interceptor to add token to headers
 axiosInstance.interceptors.request.use(
     (config) => {
         const token = getTokenFromCookie();
@@ -56,7 +57,7 @@ axiosInstance.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// Interceptor untuk menangani error pada respons
+// Response interceptor to handle errors
 axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
@@ -64,13 +65,13 @@ axiosInstance.interceptors.response.use(
             console.warn('Token expired. Attempting to refresh...');
             try {
                 const newToken = await refreshAuthToken();
-                // Menyisipkan token baru pada header request yang gagal
+                // Add the new token to the failed request's headers
                 error.config.headers.Authorization = `Bearer ${newToken}`;
-                // Mengulangi request asli
+                // Retry the failed request
                 return axiosInstance.request(error.config);
             } catch (refreshError) {
                 console.error('Failed to refresh token:', refreshError);
-                window.location.href = '/accounts/tap/login '; // Redirect ke login jika refresh token gagal
+                window.location.href = '/accounts/tap/login '; // Redirect to login if refresh fails
                 throw refreshError;
             }
         }
@@ -78,13 +79,25 @@ axiosInstance.interceptors.response.use(
     }
 );
 
-// Fungsi untuk mengambil data merchant
-export const fetchMerchantData = async () => {
+// Exporting reusable API functions
+export const fetchProfileData = async () => {
     try {
-        const response = await axiosInstance.get('/permission');
-        return response.data;
+        const response = await axiosInstance.get('/auth/profile');
+        return response.data.data;
     } catch (error) {
-        console.error('Error fetching merchant data:', error);
+        console.error('Error fetching profile data:', error);
+        throw error;
+    }
+};
+
+export const updateProfile = async (id, field, value) => {
+    try {
+        const response = await axiosInstance.put(`/auth/profile/update?id=${id}`, {
+            [field]: value,
+        });
+        return response.data.data;
+    } catch (error) {
+        console.error('Error updating profile:', error);
         throw error;
     }
 };

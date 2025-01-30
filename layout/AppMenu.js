@@ -30,22 +30,57 @@ const AppMenu = () => {
                                 query: { switcher_access: localStorage.getItem('token') }
                             },
                             {
-                                label: 'Roles',
-                                icon: 'pi pi-fw pi-home',
-                                to: '/pages/role',
-                                query: { switcher_access: localStorage.getItem('token') }
+                                label: 'Merchant',
+                                icon: 'pi pi-fw pi-id-card',
+                                to: '/pages/merchant'
                             },
                             {
-                                label: 'Permissions',
-                                icon: 'pi pi-fw pi-home',
-                                to: '/pages/permission',
-                                query: { switcher_access: localStorage.getItem('token') }
-                            }
+                                label: 'Merk',
+                                icon: 'pi pi-fw pi-clone',
+                                to: '/pages/merk'
+                            },
+                            {
+                                label: 'Category',
+                                icon: 'pi pi-fw pi-clone',
+                                to: '/pages/category'
+                            },
+                            {
+                                label: 'Unit',
+                                icon: 'pi pi-fw pi-clone',
+                                to: '/pages/unit'
+                            },
+                            {
+                                label: 'Products',
+                                icon: 'pi pi-fw pi-box',
+                                to: '/pages/inventory'
+                            },
+                            {
+                                label: 'Discounts',
+                                icon: 'pi pi-fw pi-eraser',
+                                to: '/pages/discount'
+                            },
+                            {
+                                label: 'Tax/Pajak',
+                                icon: 'pi pi-fw pi-percentage',
+                                to: '/pages/tax'
+                            },
+                            {
+                                label: 'Package',
+                                icon: 'pi pi-fw pi-circle-off',
+                                to: '/pages/package'
+                            },
+                            {
+                                label: 'Reservation',
+                                icon: 'pi pi-fw pi-flag-fill',
+                                to: '/pages/table'
+                            },
+                            {   label: 'Report', 
+                                icon: 'pi pi-fw pi-chart-bar', 
+                                to: '/pages/report' 
+                            },
                         ]
                     },
                     {
-                        label: 'Pages',
-                        icon: 'pi pi-fw pi-briefcase',
                         items: fetchedItems.map((item) => ({
                             label: item.label,
                             icon: item.icon,

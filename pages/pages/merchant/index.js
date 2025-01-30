@@ -4,7 +4,7 @@ import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Dropdown } from 'primereact/dropdown';
 import QRCode from 'react-qr-code';
-import { fetchMerchantData, updateMerchantData, generateAuthenticatorCode } from '../merchant/api';
+import { fetchMerchantData, updateMerchantData, generateAuthenticatorCode } from '../../../services/merchant/api';
 
 const Merchant = () => {
     const [merchantData, setMerchantData] = useState({

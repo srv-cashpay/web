@@ -75,7 +75,7 @@ const LoginPage = () => {
             }
         } catch (error) {
             const errorMessage =
-            error.response?.data?.meta?.message;
+            error.response.data.meta.message;
             toast.current.show({
                 severity: 'error',
                 summary: 'Error',
