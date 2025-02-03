@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_BASE_URL = 'http://192.168.14.248:2358/api/merchant';
+const API_BASE_URL = 'http://103.127.134.78:2358/api/merchant';
 
 const getTokenFromCookie = () => Cookies.get('token');
 const getRefreshTokenFromCookie = () => Cookies.get('refresh_token');
@@ -13,7 +13,7 @@ const refreshAuthToken = async () => {
 
     try {
         const response = await axios.post(
-            'http://192.168.14.248:2356/api/auth/refresh',
+            'http://103.127.134.78:2356/api/auth/refresh',
             { refresh_token: refreshToken },
             {
                 headers: {

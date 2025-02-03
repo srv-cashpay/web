@@ -11,8 +11,8 @@ import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
 import { fetchUnits, createUnit,updateExistingUnit, bulkDeleteUnits } from '../../../services/unit/api'; // Pastikan jalur ini sesuai
 import { deleteUnit as deleteUnitById } from '../../../services/unit/api';
-import UnitCreateDialog from './Dialogs/UnitCreateDialog';  // Import komponen UnitDialog
-import UnitUpdateDialog from './Dialogs/UnitUpdateDialog';
+import UnitCreateDialog from '../../../components/dialogs/unit/UnitCreateDialog';  // Import komponen UnitDialog
+import UnitUpdateDialog from '../../../components/dialogs/unit/UnitUpdateDialog';
 import { Badge } from 'primereact/badge';
 
 const Inventory = () => {

@@ -11,9 +11,9 @@ import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
 import { fetchProducts, createProduct,updateExistingProduct, bulkDeleteProducts } from '../../../services/inventory/api'; // Pastikan jalur ini sesuai
 import { deleteProduct as deleteProductById } from '../../../services/inventory/api';
-import ProductCreateDialog from '../inventory/Dialogs/ProductCreateDialog';  // Import komponen MerkDialog
-import ProductUpdateDialog from '../inventory/Dialogs/ProductUpdateDialog';
-import UploadImageDialog from '../inventory/Dialogs/UploadImageDialog';
+import ProductCreateDialog from '../../../components/dialogs/inventory/ProductCreateDialog';  // Import komponen MerkDialog
+import ProductUpdateDialog from '../../../components/dialogs/inventory/ProductUpdateDialog';
+import UploadImageDialog from '../../../components/dialogs/inventory/UploadImageDialog';
 import { Badge } from 'primereact/badge';
 
 const Inventory = () => {
@@ -297,7 +297,7 @@ const Inventory = () => {
             <div style={{ textAlign: 'center' }}>
                 {rowData.image && rowData.image.file_path ? (
                     <img
-                        src={`http://192.168.14.248:2358/${rowData.image.file_path}`}
+                        src={`http://103.127.134.78:2358/${rowData.image.file_path}`}
                         alt={rowData.product_name}
                         style={{
                             width: '70px',

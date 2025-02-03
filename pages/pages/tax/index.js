@@ -11,8 +11,8 @@ import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
 import { fetchTaxs, createTax,updateExistingTax, bulkDeleteTaxs } from '../../../services/tax/api'; // Pastikan jalur ini sesuai
 import { deleteTax as deleteTaxById } from '../../../services/tax/api';
-import TaxCreateDialog from './Dialogs/TaxCreateDialog';  // Import komponen TaxDialog
-import TaxUpdateDialog from './Dialogs/TaxUpdateDialog';
+import TaxCreateDialog from '../../../components/dialogs/tax/TaxCreateDialog';  // Import komponen TaxDialog
+import TaxUpdateDialog from '../../../components/dialogs/tax/TaxUpdateDialog';
 import { Badge } from 'primereact/badge';
 
 const Inventory = () => {

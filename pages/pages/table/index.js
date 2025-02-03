@@ -11,8 +11,8 @@ import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
 import { fetchTables, createTable,updateExistingTable, bulkDeleteTables } from '../../../services/table/api'; // Pastikan jalur ini sesuai
 import { deleteTable as deleteTableById } from '../../../services/table/api';
-import TableCreateDialog from './Dialogs/TableCreateDialog';  // Import komponen TableDialog
-import TableUpdateDialog from './Dialogs/TableUpdateDialog';
+import TableCreateDialog from '../../../components/dialogs/table/TableCreateDialog';  // Import komponen TableDialog
+import TableUpdateDialog from '../../../components/dialogs/table/TableUpdateDialog';
 import { Badge } from 'primereact/badge';
 
 const Inventory = () => {

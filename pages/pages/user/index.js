@@ -9,10 +9,10 @@ import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
-import { fetchUsers, createUser,updateExistingUser, bulkDeleteUsers } from '../../../services/user/api'; // Pastikan jalur ini sesuai
+import { fetchUsers, createUser,updateExistingUser, bulkDeleteUsers } from '../../../services/user/api';
 import { deleteUser as deleteUserById } from '../../../services/user/api';
-import UserCreateDialog from './Dialogs/UserCreateDialog';  // Import komponen UserDialog
-import UserUpdateDialog from './Dialogs/UserUpdateDialog';
+import UserCreateDialog from '../../../components/dialogs/user/UserCreateDialog'; 
+import UserUpdateDialog from '../../../components/dialogs/user/UserUpdateDialog';
 import { Badge } from 'primereact/badge';
 
 const Inventory = () => {

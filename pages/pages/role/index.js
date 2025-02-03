@@ -11,8 +11,8 @@ import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
 import { fetchRoles, createRole,updateExistingRole, bulkDeleteRoles } from '../../../services/role/api'; // Pastikan jalur ini sesuai
 import { deleteRole as deleteRoleById } from '../../../services/role/api';
-import RoleCreateDialog from './Dialogs/RoleCreateDialog';  // Import komponen RoleDialog
-import RoleUpdateDialog from './Dialogs/RoleUpdateDialog';
+import RoleCreateDialog from '../../../components/dialogs/role/RoleCreateDialog';  // Import komponen RoleDialog
+import RoleUpdateDialog from '../../../components/dialogs/role/RoleUpdateDialog';
 import { Badge } from 'primereact/badge';
 
 const Inventory = () => {

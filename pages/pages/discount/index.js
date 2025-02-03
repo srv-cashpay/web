@@ -11,8 +11,8 @@ import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
 import { fetchDiscounts, createDiscount,updateExistingDiscount, bulkDeleteDiscounts } from '../../../services/discount/api'; // Pastikan jalur ini sesuai
 import { deleteDiscount as deleteDiscountById } from '../../../services/discount/api';
-import DiscountCreateDialog from './Dialogs/DiscountCreateDialog';  // Import komponen DiscountDialog
-import DiscountUpdateDialog from './Dialogs/DiscountUpdateDialog';
+import DiscountCreateDialog from '../../../components/dialogs/discount/DiscountCreateDialog';  // Import komponen DiscountDialog
+import DiscountUpdateDialog from '../../../components/dialogs/discount/DiscountUpdateDialog';
 import { Badge } from 'primereact/badge';
 
 const Inventory = () => {

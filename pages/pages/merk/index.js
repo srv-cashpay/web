@@ -11,8 +11,8 @@ import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
 import { fetchMerks, createMerk,updateExistingMerk, bulkDeleteMerks } from '../../../services/merk/api'; // Pastikan jalur ini sesuai
 import { deleteMerk as deleteMerkById } from '../../../services/merk/api';
-import MerkCreateDialog from './Dialogs/MerkCreateDialog';  // Import komponen MerkDialog
-import MerkUpdateDialog from './Dialogs/MerkUpdateDialog';
+import MerkCreateDialog from '../../../components/dialogs/merk/MerkCreateDialog';  // Import komponen MerkDialog
+import MerkUpdateDialog from '../../../components/dialogs/merk/MerkUpdateDialog';
 import { Badge } from 'primereact/badge';
 
 const Inventory = () => {

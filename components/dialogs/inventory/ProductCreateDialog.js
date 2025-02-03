@@ -7,7 +7,7 @@ import { RadioButton } from 'primereact/radiobutton';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
-import { fetchMerkData, fetchCategoryData } from '../../../../services/inventory/api';
+import { fetchMerkData, fetchCategoryData } from '../../../services/inventory/api';
 
 const ProductCreateDialog = ({ visible, product, setProduct, hideDialog, saveProduct }) => {
     const [isInfiniteStock, setIsInfiniteStock] = useState(false);

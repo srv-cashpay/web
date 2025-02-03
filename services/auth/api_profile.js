@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_BASE_URL = 'http://192.168.14.248:2356/api'; // Pastikan base URL sesuai
+const API_BASE_URL = 'http://103.127.134.78:2356/api'; // Pastikan base URL sesuai
 
 // Helper function to get the token from cookies
 const getTokenFromCookie = () => Cookies.get('token');
@@ -14,7 +14,7 @@ const refreshAuthToken = async () => {
 
     try {
         const response = await axios.post(
-            'http://192.168.14.248:2356/api/auth/refresh',
+            'http://103.127.134.78:2356/api/auth/refresh',
             { refresh_token: refreshToken },
             {
                 headers: {

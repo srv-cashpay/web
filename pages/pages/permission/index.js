@@ -11,8 +11,8 @@ import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
 import { fetchPermissions, createPermission,updateExistingPermission, bulkDeletePermissions } from '../../../services/permission/api'; // Pastikan jalur ini sesuai
 import { deletePermission as deletePermissionById } from '../../../services/permission/api';
-import PermissionCreateDialog from './Dialogs/PermissionCreateDialog';  // Import komponen PermissionDialog
-import PermissionUpdateDialog from './Dialogs/PermissionUpdateDialog';
+import PermissionCreateDialog from '../../../components/dialogs/permission/PermissionCreateDialog';  // Import komponen PermissionDialog
+import PermissionUpdateDialog from '../../../components/dialogs/permission/PermissionUpdateDialog';
 import { Badge } from 'primereact/badge';
 
 const Inventory = () => {

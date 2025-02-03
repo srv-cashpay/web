@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
-import { uploadImage } from '../../../../services/inventory/api';
+import { uploadImage } from '../../../services/inventory/api';
 
 const UploadImageDialog = ({ visible, product, setProduct, hideDialog }) => {
     const [imagePreview, setImagePreview] = useState(null);

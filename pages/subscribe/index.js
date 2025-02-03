@@ -17,7 +17,7 @@ const BlocksDemo = () => {
     const handlePayment = async (code) => {
         const token = getTokenFromCookie();
 
-        const response = await axios.get(`http://192.168.14.248:8080/api/v1/package/${code}`, {
+        const response = await axios.get(`http://103.127.134.78:8080/api/v1/package/${code}`, {
           headers: {
             Authorization: `Bearer ${token}`
         }
@@ -36,7 +36,7 @@ const BlocksDemo = () => {
             try {
                 const token = getTokenFromCookie();
     
-                const response = await axios.get(`http://192.168.14.248:8080/api/v1/package`, {
+                const response = await axios.get(`http://103.127.134.78:8080/api/v1/package`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

@@ -11,8 +11,8 @@ import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
 import { fetchCategorys, createCategory,updateExistingCategory, bulkDeleteCategorys } from '../../../services/category/api'; // Pastikan jalur ini sesuai
 import { deleteCategory as deleteCategoryById } from '../../../services/category/api';
-import CategoryCreateDialog from './Dialogs/CategoryCreateDialog';  // Import komponen CategoryDialog
-import CategoryUpdateDialog from './Dialogs/CategoryUpdateDialog';
+import CategoryCreateDialog from '../../../components/dialogs/category/CategoryCreateDialog';  // Import komponen CategoryDialog
+import CategoryUpdateDialog from '../../../components/dialogs/category/CategoryUpdateDialog';
 import { Badge } from 'primereact/badge';
 
 const Inventory = () => {
