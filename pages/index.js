@@ -19,7 +19,7 @@ const LandingPage = () => {
                     <Link href="/">
                         <a className="flex align-items-center">
                             <img src={`${contextPath}/layout/images/${layoutConfig.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}.svg`} alt="Sakai Logo" height="50" className="mr-0 lg:mr-2" />
-                            <span className="text-900 font-medium text-2xl line-height-3 mr-8">SAKAI</span>
+                            <span className="text-900 font-medium text-2xl line-height-3 mr-8">Cashpay</span>
                         </a>
                     </Link>
                     <StyleClass nodeRef={menuRef} selector="@next" enterClassName="hidden" leaveToClassName="hidden" hideOnOutsideClick="true">
@@ -63,10 +63,10 @@ const LandingPage = () => {
                     className="flex flex-column pt-4 px-4 lg:px-8 overflow-hidden"
                     style={{ background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, #EEEFAF 0%, #C3E3FA 100%)', clipPath: 'ellipse(150% 87% at 93% 13%)' }}>
                     <div className="mx-4 md:mx-8 mt-0 md:mt-4">
-                        <h1 className="text-6xl font-bold text-gray-900 line-height-2">GREET
-                            <span className="font-light block"></span>Swipe To Connect
+                        <h1 className="text-6xl font-bold text-gray-900 line-height-2">Cashpay
+                            {/* <span className="font-light block"></span>Swipe To Connect */}
                         </h1>
-                        <p className="font-normal text-2xl line-height-3 md:mt-3 text-gray-700">Find your perfect match with our revolutionary dating app! Swipe, match, and connect with ease. Join the fun and discover meaningful connections today! </p>
+                        <p className="font-normal text-2xl line-height-3 md:mt-3 text-gray-700">is a digital payment platform offering instant, secure, and convenient transactions. Designed to simplify shoppin, and financial management💸</p>
                         <Button type="button" label="Get Started" className="p-button-rounded text-xl border-none mt-3 bg-blue-500 font-normal line-height-3 px-3 text-white"></Button>
                     </div>
                     <div className="flex justify-content-center md:justify-content-end">
@@ -304,7 +304,7 @@ const LandingPage = () => {
                             <Link href="/">
                                 <a className="flex flex-wrap align-items-center justify-content-center md:justify-content-start md:mb-0 mb-3 cursor-pointer">
                                     <img src={`${contextPath}/layout/images/${layoutConfig.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}.svg`} alt="footer sections" width="50" height="50" className="mr-2" />
-                                    <span className="font-medium text-3xl text-900">SAKAI</span>
+                                    <span className="font-medium text-3xl text-900">Cashpay</span>
                                 </a>
                             </Link>
                         </div>
