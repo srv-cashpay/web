@@ -52,7 +52,7 @@ const RegisterPage = () => {
         setIsLoading(true); // Aktifkan loading saat registrasi dimulai
         try {
             const fullWhatsappNumber = `${countryCode}${whatsapp}`;
-            const response = await axios.post('http://103.127.134.78:2356/api/auth/signup', {
+            const response = await axios.post('http://127.0.0.1:2356/api/auth/signup', {
                 full_name,
                 email,
                 password,
