@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 // Membuat instance Axios
 const axiosInstance = axios.create({
-    baseURL: 'http://127.0.0.1:2358/api',
+    baseURL: 'http://103.127.134.78:2358/api',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -20,7 +20,7 @@ const refreshAuthToken = async () => {
 
     try {
         const response = await axios.post(
-            'http://127.0.0.1:2356/api/auth/refresh',
+            'http://103.127.134.78:2356/api/auth/refresh',
             { refresh_token: refreshToken },
             {
                 headers: {

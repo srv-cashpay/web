@@ -67,7 +67,7 @@ const Ticket = () => {
         const fetchData = async () => {
             try {
                 const token = getTokenFromCookie();
-                const response = await axios.get(`http://127.0.0.1:8080/api/v1/employee?page=${paginationData.page}&limit=${paginationData.limit}`, {
+                const response = await axios.get(`http://103.127.134.78:8080/api/v1/employee?page=${paginationData.page}&limit=${paginationData.limit}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -126,7 +126,7 @@ const Ticket = () => {
             const token = getTokenFromCookie();
             
             // Assuming you want to send the `employee` state as the data payload
-            const response = await axios.post(`http://127.0.0.1:8080/api/v1/employee`, employee, {
+            const response = await axios.post(`http://103.127.134.78:8080/api/v1/employee`, employee, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
