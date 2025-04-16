@@ -297,7 +297,7 @@ const Inventory = () => {
             <div style={{ textAlign: 'center' }}>
                 {rowData.image && rowData.image.file_path ? (
                     <img
-                        src={`http://103.127.134.78:2358/${rowData.image.file_path}`}
+                        src={`https://103.127.134.78:2358/${rowData.image.file_path}`}
                         alt={rowData.product_name}
                         style={{
                             width: '70px',

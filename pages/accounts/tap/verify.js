@@ -57,7 +57,7 @@ const VerifyPage = () => {
         }
     
         try {
-            const response = await axios.post(`http://103.127.134.78:2356/verify?token=${token}`, { otp: otpCode });
+            const response = await axios.post(`https://103.127.134.78:2356/verify?token=${token}`, { otp: otpCode });
     
             // Cek jika respons berhasil
             if (response.data.status && response.data.code === 200) {
@@ -97,7 +97,7 @@ const VerifyPage = () => {
 
         try {
             // Kirim request PUT ke API
-            const response = await axios.put(`http://103.127.134.78:2356/resend-otp?token=${token}`);
+            const response = await axios.put(`https://103.127.134.78:2356/resend-otp?token=${token}`);
             if (response.data.success) {
                 setNotification({ type: 'success', message: 'OTP resent successfully.' });
             } else {
