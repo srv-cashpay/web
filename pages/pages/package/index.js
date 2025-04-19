@@ -26,7 +26,7 @@ const Package = () => {
     const fetchPaymentToken = async () => {
         const token = getTokenFromCookie();
         try {
-            const response = await fetch('https://103.127.134.78:2358/api/merchant/packages/create', {
+            const response = await fetch('http://103.127.134.78:2358/api/merchant/packages/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
