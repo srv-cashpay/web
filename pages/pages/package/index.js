@@ -3,14 +3,14 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
-    
+
 const Package = () => {
     const [paymentToken, setPaymentToken] = useState(null);
     const [formData, setFormData] = useState({
         email: '',
         first_name: '',
         last_name: '',
-        gross_amount: 1,
+        gross_amount: 72650, // Rp49.000 + PPN 11%
     });
 
     const getTokenFromCookie = () => Cookies.get('token');
@@ -34,11 +34,10 @@ const Package = () => {
                 },
                 body: JSON.stringify(formData),
             });
-    
+
             const data = await response.json();
             if (data.status && data.data.token) {
-                console.log('Token fetched:', data.data.token); // Log untuk memastikan token benar
-                setPaymentToken(data.data.token); // Simpan token untuk digunakan di Snap.js
+                setPaymentToken(data.data.token);
             } else {
                 console.error('Invalid response:', data);
                 alert('Gagal mengambil token pembayaran');
@@ -48,7 +47,6 @@ const Package = () => {
             alert('Gagal mengambil token pembayaran, periksa koneksi Anda');
         }
     };
-    
 
     const handleMidtransPayment = () => {
         if (!paymentToken) {
@@ -69,6 +67,22 @@ const Package = () => {
 
     return (
         <div className="grid">
+            {/* Deskripsi di bagian atas halaman */}
+            <div className="col-12">
+                <div className="card" style={{ marginBottom: '2rem', padding: '2rem' }}>
+                <h2>Upgrade to Premium</h2>
+                <p>Dapatkan semua fitur premium untuk meningkatkan pengalaman dan performa penjualan Anda:</p>
+                    <ul style={{ paddingLeft: '1.5rem' }}>
+                        <li>✓ Langganan selama 1 bulan</li>
+                        <li>✓ Bebas Iklan</li>
+                        <li>✓ Laporan Penjualan Lengkap</li>
+                        <li>✓ Dukungan Prioritas</li>
+                        <li>✓ Fitur Khusus Merchant</li>
+                    </ul>
+                </div>
+            </div>
+
+            {/* Form & Order Summary */}
             <div className="col-12 md:col-6">
                 <div className="card p-fluid">
                     <div className="field">
@@ -104,14 +118,15 @@ const Package = () => {
                     <Button
                         label="PAY"
                         onClick={async () => {
-                            await fetchPaymentToken(); // Dapatkan token sebelum membuka Snap
-                            handleMidtransPayment(); // Lanjutkan dengan pembayaran jika token berhasil didapatkan
+                            await fetchPaymentToken();
+                            handleMidtransPayment();
                         }}
                         className="p-button-success"
                     />
                 </div>
             </div>
-            
+
+            {/* Ringkasan Pembayaran */}
             <div className="col-12 md:col-6">
                 <div className="card p-fluid" style={{ backgroundColor: '#fff', padding: '1rem', borderRadius: '8px' }}>
                     <h5 style={{ color: '#000', marginBottom: '1rem' }}>Order Summary</h5>
@@ -120,7 +135,7 @@ const Package = () => {
                             <h5 style={{ color: '#000', margin: 0 }}>Subtotal</h5>
                         </div>
                         <div className="col-6 text-right">
-                            <h5 style={{ color: '#000', margin: 0 }}>Rp.49,000</h5>
+                            <h5 style={{ color: '#000', margin: 0 }}>Rp49,000</h5>
                         </div>
                     </div>
 
@@ -129,7 +144,7 @@ const Package = () => {
                             <h5 style={{ color: '#000', margin: 0 }}>PPN @ 11.00%</h5>
                         </div>
                         <div className="col-6 text-right">
-                            <h5 style={{ color: '#000', margin: 0 }}>Rp.23,650</h5>
+                            <h5 style={{ color: '#000', margin: 0 }}>Rp5,390</h5>
                         </div>
                     </div>
 
@@ -147,7 +162,6 @@ const Package = () => {
                     </div>
                 </div>
             </div>
-           
         </div>
     );
 };
