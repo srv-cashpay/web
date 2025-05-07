@@ -73,8 +73,49 @@ const LandingPage = () => {
                         <img src={`${contextPath}/demo/images/landing/screen-1.png`} alt="Hero Image" className="w-9 md:w-auto" />
                     </div>
                 </div>
+                <div id="product-details" className="px-4 py-12 md:px-8 bg-white">
+  <div className="max-w-screen-md mx-auto">
+    <div className="p-8 border rounded-2xl shadow-md bg-white text-center">
+      <h2 className="text-3xl font-bold text-gray-900 mb-4">Nikmati Fitur Premium</h2>
+      <p className="text-lg text-gray-700 mb-6">
+        Upgrade akun Anda dan nikmati berbagai kemudahan eksklusif yang dirancang khusus untuk menunjang bisnis Anda.
+      </p>
+      
+      <ul className="text-gray-700 text-left text-base space-y-4 list-disc list-inside mb-6">
+        <li><strong>Tanpa Iklan</strong> – Navigasi aplikasi jadi lebih bersih dan nyaman.</li>
+        <li><strong>Laporan Penjualan Lengkap</strong> – Dapatkan data harian, mingguan, dan bulanan.</li>
+        <li><strong>Dukungan Prioritas</strong> – Respons cepat dari tim support kami.</li>
+        <li><strong>Fitur Khusus Merchant</strong> – Akses tools eksklusif yang tidak tersedia di versi gratis.</li>
+      </ul>
+
+      <div className="mt-6 mb-4">
+        <h3 className="text-2xl font-bold text-blue-800">Rp49.000 / bulan</h3>
+        <p className="text-sm text-gray-600">(belum termasuk PPN 11%)</p>
+      </div>
+
+      <Link href="/accounts/tap/register">
+        <Button label="Upgrade Sekarang" className="p-button-rounded bg-blue-500 border-none text-white px-5 py-3 text-lg" />
+      </Link>
+    </div>
+  </div>
+</div>
+
+
+                <footer className="surface-0 text-center py-4 border-top-1 surface-border mt-8">
+    <p className="text-600 mb-2">© 2025 Cashpay. All rights reserved.</p>
+    <a
+        href="https://www.instagram.com/cashpay" // Ganti dengan link Instagram kamu
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-500 hover:text-blue-700"
+    >
+        <i className="pi pi-instagram text-2xl"></i>
+    </a>
+</footer>
             </div>
+            
         </div>
+        
     );
 };
 
