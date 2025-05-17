@@ -55,7 +55,7 @@ const LoginPage = () => {
         try {
             // Choose the correct login data based on method
             const loginData = loginMethod === 'whatsapp' ? { whatsapp, password } : { email, password };
-            const response = await axios.post('http://103.127.134.78:2356/api/auth/signin', loginData, {
+            const response = await axios.post('https://103.127.134.78:2356/api/auth/signin', loginData, {
                 headers: {
                     'X-Api-Key': '3f=Pr#g1@RU-nw=30'
                 }

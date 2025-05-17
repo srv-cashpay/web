@@ -70,6 +70,11 @@ const AppMenu = () => {
                                 to: '/pages/package'
                             },
                             {
+                                label: 'Payment',
+                                icon: 'pi pi-fw pi-eraser',
+                                to: '/pages/payment'
+                            },
+                            {
                                 label: 'Reservation',
                                 icon: 'pi pi-fw pi-flag-fill',
                                 to: '/pages/table'
