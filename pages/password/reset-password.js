@@ -31,7 +31,7 @@ const resetpassword = () => {
         }); // Reset notification
 
         try {
-            const response = await axios.post(`http://103.127.134.78:2356/api/auth/resetpassword?token=${token}`,  
+            const response = await axios.post(`https://cashpay.my.id:2356/api/auth/resetpassword?token=${token}`,  
                 { new_password },
                 {
                     headers: {

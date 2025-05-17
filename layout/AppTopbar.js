@@ -33,7 +33,7 @@ const AppTopbar = forwardRef((props, ref) => {
         const token = getCookie('token'); // Mengambil token dari cookie
 
         try {
-            const response = await fetch('http://103.127.134.78:2356/api/logout', {
+            const response = await fetch('https://cashpay.my.id:2356/api/logout', {
                 method: 'POST', // Atur metode sesuai kebutuhan API Anda
                 headers: {
                     'Authorization': `Bearer ${token}` // Menggunakan token dari cookie

@@ -20,7 +20,7 @@ export default function PaymentChecklist() {
     setHasConfirmed(true);
 
     try {
-      const response = await fetch("http://103.127.134.78:2358/midtrans/callback", {
+      const response = await fetch("https://cashpay.my.id:2358/midtrans/callback", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
