@@ -22,7 +22,8 @@ const Inventory = () => {
             user: '',
         },
         status: 0,
-        description: ''
+        description: '',
+        email: ''
     }; 
 
     const [users, setUsers] = useState(null);
@@ -37,6 +38,7 @@ const Inventory = () => {
     const toast = useRef(null);
     const dt = useRef(null);
     const [rowsPerPage, setRowsPerPage] = useState(10); // Default 10
+    const [expandedRows, setExpandedRows] = useState(null);
 
     const hideUserDialog = () => {
         setShowUserDialog(false);
@@ -57,28 +59,24 @@ const Inventory = () => {
     });
     
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetchUsers({ page: paginationData.page, limit: rowsPerPage,  totalPages: paginationData.totalPages});
-                setUsers(Array.isArray(response.rows) ? response.rows : []);
+    const fetchData = async () => {
+        try {
+            const response = await fetchUsers({ page: paginationData.page, limit: rowsPerPage });
+            setUsers(response.users);
 
-                setPaginationData(prev => ({
-                    ...prev,
-                    totalPages: response.total_page,  // Ambil total halaman dari respons API
-                    totalData: response.total_data,
-                    totalRows: response.total_rows,
-                    nextPage: response.next_page
-                    
-                }));
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-        fetchData();
-        console.log("Updated Pagination Data:", paginationData);  // Log setiap kali paginationData berubah
+            setPaginationData(prev => ({
+                ...prev,
+                totalRows: response.totalRows,
+                totalPages: response.totalPages,
+                page: response.currentPage
+            }));
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+    fetchData();
+}, [paginationData.page, rowsPerPage]);
 
-    }, [paginationData.page, rowsPerPage, paginationData.totalPages]); 
-   
 
     const openNew = () => {
         setUser(emptyUser);
@@ -216,27 +214,57 @@ const Inventory = () => {
         );
     };
 
-    const userBodyTemplate = (rowData) => {
+    const whatsappBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Created By</span>
-                {rowData.created_by}
+                <span className="p-column-title">Whatsapp</span>
+                {rowData.whatsapp}
             </>
         );
     };
 
-    const statusBodyTemplate = (rowData) => {
+    const otpBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Status</span>
-                <Badge
-                    value={rowData.status === 1 ? 'Active' : 'Inactive'}
-                    severity={rowData.status === 1 ? 'success' : 'danger'}
-                    className="ml-2"
-                />
+                <span className="p-column-title">Otp</span>
+                {rowData.verified.otp}
             </>
         );
-    };  
+    };
+
+    const emailBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Email</span>
+                {rowData.email}
+            </>
+        );
+    };
+
+  const statusBodyTemplate = (rowData) => {
+  const verified = rowData.verified;
+
+  if (!verified) {
+    return <span>No Verified Data</span>;
+  }
+
+  return (
+    <div>
+      <Badge
+        value={verified.verified ? 'Verified' : 'Not Verified'}
+        severity={verified.verified ? 'success' : 'danger'}
+        className="mb-1"
+      />
+      <div>
+        <small><strong>Account Expired:</strong> {new Date(verified.account_expired).toLocaleString()}</small>
+      </div>
+      <div>
+        <small><strong>Expired At:</strong> {new Date(verified.expired_at).toLocaleString()}</small>
+      </div>
+    </div>
+  );
+};
+
 
     const handleNextPage = () => {
         setPaginationData(prev => {
@@ -292,6 +320,56 @@ const Inventory = () => {
         );
     };
 
+    const rowExpansionTemplate = (data) => {
+    return (
+        <div 
+            className="p-3"
+            style={{
+                backgroundColor: '#f9f9f9',
+                borderRadius: '8px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                marginTop: '1rem',
+            }}
+        >
+            <h6 style={{ marginBottom: '1rem', borderBottom: '1px solid #ddd', paddingBottom: '0.5rem' }}>
+                Merchant Info
+            </h6>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+                <div>
+                    <label style={{ fontWeight: '600', color: '#555' }}>Name:</label>
+                    <div>{data.merchant.merchant_name || "-"}</div>
+                </div>
+                <div>
+                    <label style={{ fontWeight: '600', color: '#555' }}>Address:</label>
+                    <div>{data.merchant.address || "-"}</div>
+                </div>
+                <div>
+                    <label style={{ fontWeight: '600', color: '#555' }}>Country:</label>
+                    <div>{data.merchant.country || "-"}</div>
+                </div>
+                <div>
+                    <label style={{ fontWeight: '600', color: '#555' }}>City:</label>
+                    <div>{data.merchant.city || "-"}</div>
+                </div>
+                <div>
+                    <label style={{ fontWeight: '600', color: '#555' }}>Zip:</label>
+                    <div>{data.merchant.zip || "-"}</div>
+                </div>
+                <div>
+                    <label style={{ fontWeight: '600', color: '#555' }}>Phone:</label>
+                    <div>{data.merchant.phone || "-"}</div>
+                </div>
+                <div>
+                    <label style={{ fontWeight: '600', color: '#555' }}>Currency:</label>
+                    <div>{data.merchant.currency || "-"}</div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
     return (
         <div className="grid crud-demo">
             <div className="col-12">
@@ -300,25 +378,31 @@ const Inventory = () => {
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
-                       ref={dt}
-                       value={users}
-                       selection={selectedUsers}
-                       onSelectionChange={(e) => setSelectedUsers(e.value)}
-                       dataKey="id"
-                       className="datatable-responsive"
-                       globalFilter={globalFilter}
-                       emptyMessage="No users found."
-                       header={header}
-                       responsiveLayout="scroll"                   
-                    >
-                        <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="nomor" header="No" body={nomorBodyTemplate} style={{ width: '5%' }} />
+    ref={dt}
+    value={users}
+    selection={selectedUsers}
+    onSelectionChange={(e) => setSelectedUsers(e.value)}
+    dataKey="id"
+    className="datatable-responsive"
+    globalFilter={globalFilter}
+    emptyMessage="No users found."
+    header={header}
+    responsiveLayout="scroll"
+    expandedRows={expandedRows}
+    onRowToggle={(e) => setExpandedRows(e.data)}
+    rowExpansionTemplate={rowExpansionTemplate}
+>
+    <Column expander style={{ width: '3em' }} />
+    <Column selectionMode="multiple" headerStyle={{ width: '3em' }}></Column>
+    <Column field="nomor" header="No" body={nomorBodyTemplate} style={{ width: '5%' }} />
+    <Column field="user" header="Name" sortable body={nameBodyTemplate} />
+    <Column field="whatsapp" header="Whatsapp" sortable body={whatsappBodyTemplate} />
+    <Column field="otp" header="Otp" sortable body={otpBodyTemplate} />
+    <Column field="status" header="Status" body={statusBodyTemplate} />
+    <Column field="email" header="Email" body={emailBodyTemplate} />
+    <Column field="action" body={actionBodyTemplate} />
+</DataTable>
 
-                        <Column field="user" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="created_by" header="Created By" sortable body={userBodyTemplate}></Column>
-                        <Column field="status" header="Status" body={statusBodyTemplate}></Column>
-                        <Column field="action" body={actionBodyTemplate} ></Column>
-                    </DataTable>
 
                     <div className="paginator-buttons" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <div className="flex justify-content-between align-items-center">

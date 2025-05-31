@@ -95,12 +95,24 @@ export const fetchUsers = async (paginationData) => {
         const response = await axiosInstance.get('/merchant/user/pagination', {
             params: paginationData,
         });
-        return response.data.data; // Data produk
+
+        // Pastikan response sukses dan data tersedia
+        if (response.data.success && response.data.data) {
+            return {
+                users: response.data.data.data, // array data user
+                totalRows: response.data.data.total_rows,
+                totalPages: response.data.data.total_page,
+                currentPage: response.data.data.page,
+            };
+        } else {
+            throw new Error('Invalid API response structure');
+        }
     } catch (error) {
         console.error('Error fetching users:', error);
         throw error;
     }
 };
+
 
 // Fungsi untuk membuat produk baru
 export const createUser = async (user) => {
