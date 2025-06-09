@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
 import { fetchRoleUserPermissions, createRoleUserPermission, updateExistingRole, bulkDeleteRoleUserPermissions } from '../../../services/roleuserpermission/api'; // Pastikan jalur ini sesuai
-import { deleteRoleUserPermissions as deleteRoleById } from '../../../services/roleuserpermission/api';
+import { deleteRoleUserPermissions as deleteRoleUserPermissionById } from '../../../services/roleuserpermission/api';
 import RoleCreateDialog from '../../../components/dialogs/roleuserpermission/RoleUserPermissionCreateDialog';  // Import komponen RoleDialog
 import RoleUpdateDialog from '../../../components/dialogs/roleuserpermission/RoleUserPermissionUpdateDialog';
 import { Badge } from 'primereact/badge';
@@ -144,7 +144,7 @@ const Inventory = () => {
     
     const deleteRole = async () => {
         try {
-            await deleteRoleById(roleuserpermission.id); // Use the renamed function to delete by id
+            await deleteRoleUserPermissionById(roleuserpermission.id); // Use the renamed function to delete by id
             const _roleuserpermissions = roleuserpermissions.filter((val) => val.id !== roleuserpermission.id);
             setRoleUserPermissions(_roleuserpermissions);
             setDeleteRoleDialog(false);

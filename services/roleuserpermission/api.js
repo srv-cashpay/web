@@ -114,7 +114,7 @@ export const createRoleUserPermission = async (roleuserpermission) => {
 };
 
 // Fungsi untuk menghapus produk berdasarkan ID
-export const deleteRoleUserPermission = async (id) => {
+export const deleteRoleUserPermissionById = async (id) => {
     try {
         await axiosInstance.delete(`/merchant/roleuserpermission/${id}`);
     } catch (error) {

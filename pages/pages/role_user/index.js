@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
 import { fetchRoleUsers, createRoleUser ,updateExistingRole, bulkDeleteRoleUsers } from '../../../services/roleuser/api'; // Pastikan jalur ini sesuai
-import { deleteRoleUsers as deleteRoleById } from '../../../services/roleuser/api';
+import { deleteRoleUser as deleteRoleById } from '../../../services/roleuser/api';
 import RoleCreateDialog from '../../../components/dialogs/roleuser/RoleUserCreateDialog';  // Import komponen RoleDialog
 import RoleUpdateDialog from '../../../components/dialogs/roleuser/RoleUserUpdateDialog';
 import { Badge } from 'primereact/badge';
