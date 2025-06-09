@@ -124,7 +124,7 @@ export const deleteRoleUserPermission = async (id) => {
 };
 
 // Fungsi untuk menghapus produk secara bulk
-export const bulkDeleteRoles = async (selectedRoleIds) => {
+export const bulkDeleteRoleUserPermissions = async (selectedRoleIds) => {
     try {
         await axiosInstance.delete('/merchant/roleuserpermission/bulk-delete', {
             data: { id: selectedRoleIds },

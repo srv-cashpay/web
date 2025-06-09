@@ -9,7 +9,7 @@ import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
-import { fetchRoleUsers, createRole,updateExistingRole, bulkDeleteRoleUsers } from '../../../services/roleuser/api'; // Pastikan jalur ini sesuai
+import { fetchRoleUsers, createRoleUser ,updateExistingRole, bulkDeleteRoleUsers } from '../../../services/roleuser/api'; // Pastikan jalur ini sesuai
 import { deleteRoleUsers as deleteRoleById } from '../../../services/roleuser/api';
 import RoleCreateDialog from '../../../components/dialogs/roleuser/RoleUserCreateDialog';  // Import komponen RoleDialog
 import RoleUpdateDialog from '../../../components/dialogs/roleuser/RoleUserUpdateDialog';
@@ -115,7 +115,7 @@ const Inventory = () => {
 
     const saveDataToApi = async () => {
         try { 
-            const response = await createRole(roleuser);
+            const response = await createRoleUser(roleuser);
             toast.current.show({ severity: 'success', summary: 'Successful', detail: response.message, life: 3000 });
         } catch (error) {
             console.error("Error saving data:", error);
