@@ -166,23 +166,23 @@ const LoginPage = () => {
                                     <Checkbox inputid="rememberme1" checked={checked} onChange={(e) => setChecked(e.checked)} className="mr-2" />
                                     <label htmlFor="rememberme1">Remember me</label>
                                 </div>
-                                <Link href="/password/request-forgot-password">
+                                {/* <Link href="/password/request-forgot-password">
                                     <a className="font-medium no-underline ml-2 text-right cursor-pointer" style={{ color: 'var(--primary-color)' }}>
                                         Forgot password?
                                     </a>
-                                </Link>
+                                </Link> */}
                             </div>
 
                             <Button label="Sign In" className="w-full p-3 text-xl" onClick={handleLogin} disabled={!isFormFilled()}></Button>
 
-                            <Link href="/accounts/tap/register">
+                            {/* <Link href="/accounts/tap/register">
                                 <div style={{ textAlign: 'center', marginTop: '2rem' }}>
                                     You Don't have an account?
                                     <span className="font-medium no-underline cursor-pointer" style={{ color: 'var(--primary-color)' }}>
                                         Register?
                                     </span>
                                 </div>
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
                 </div>
