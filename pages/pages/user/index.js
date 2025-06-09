@@ -119,7 +119,7 @@ const Inventory = () => {
             toast.current.show({ severity: 'success', summary: 'Successful', detail: response.message, life: 3000 });
         } catch (error) {
             console.error("Error saving data:", error);
-            toast.current.show({ severity: 'error', summary: 'Error', detail: error.response.data.meta.message, life: 3000 });
+            toast.current.show({ severity: 'error', summary: 'Error', detail: error.data.meta.message, life: 3000 });
         }
     };
 

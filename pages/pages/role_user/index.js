@@ -9,27 +9,27 @@ import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import withAuth from '../../../layout/context/withAuth';
 import { Dropdown } from 'primereact/dropdown'; 
-import { fetchRoles, createRole,updateExistingRole, bulkDeleteRoles } from '../../../services/role/api'; // Pastikan jalur ini sesuai
-import { deleteRole as deleteRoleById } from '../../../services/role/api';
-import RoleCreateDialog from '../../../components/dialogs/role/RoleCreateDialog';  // Import komponen RoleDialog
-import RoleUpdateDialog from '../../../components/dialogs/role/RoleUpdateDialog';
+import { fetchRoleUsers, createRole,updateExistingRole, bulkDeleteRoleUsers } from '../../../services/roleuser/api'; // Pastikan jalur ini sesuai
+import { deleteRoleUsers as deleteRoleById } from '../../../services/roleuser/api';
+import RoleCreateDialog from '../../../components/dialogs/roleuser/RoleUserCreateDialog';  // Import komponen RoleDialog
+import RoleUpdateDialog from '../../../components/dialogs/roleuser/RoleUserUpdateDialog';
 import { Badge } from 'primereact/badge';
 
 const Inventory = () => {
     let emptyRole = {
         id: null,
-        role :{
-            role: '',
+        roleuser :{
+            roleuser: '',
         },
     }; 
 
-    const [roles, setRoles] = useState(null);
+    const [roleusers, setRoleUsers] = useState(null);
     const [roleDialog, setRoleDialog] = useState(false);
     const [roleUpdateDialog, setRoleUpdateDialog] = useState(false);
     const [deleteRoleDialog, setDeleteRoleDialog] = useState(false);
-    const [deleteRolesDialog, setDeleteRolesDialog] = useState(false);
-    const [role, setRole] = useState(emptyRole);
-    const [selectedRoles, setSelectedRoles] = useState(null);
+    const [deleteRoleUsersDialog, setDeleteRoleUsersDialog] = useState(false);
+    const [roleuser, setRole] = useState(emptyRole);
+    const [selectedRoleUsers, setSelectedRoleUsers] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
@@ -57,8 +57,8 @@ const Inventory = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetchRoles({ page: paginationData.page, limit: rowsPerPage,  totalPages: paginationData.totalPages});
-                setRoles(Array.isArray(response.rows) ? response.rows : []);
+                const response = await fetchRoleUsers({ page: paginationData.page, limit: rowsPerPage,  totalPages: paginationData.totalPages});
+                setRoleUsers(Array.isArray(response.rows) ? response.rows : []);
 
                 setPaginationData(prev => ({
                     ...prev,
@@ -105,8 +105,8 @@ const Inventory = () => {
         setDeleteRoleDialog(false);
     };
 
-    const hideDeleteRolesDialog = () => {
-        setDeleteRolesDialog(false);
+    const hideDeleteRoleUsersDialog = () => {
+        setDeleteRoleUsersDialog(false);
     };
 
     const saveRole = () => {
@@ -115,7 +115,7 @@ const Inventory = () => {
 
     const saveDataToApi = async () => {
         try { 
-            const response = await createRole(role);
+            const response = await createRole(roleuser);
             toast.current.show({ severity: 'success', summary: 'Successful', detail: response.message, life: 3000 });
         } catch (error) {
             console.error("Error saving data:", error);
@@ -129,7 +129,7 @@ const Inventory = () => {
     
     const updateDataToApi = async () => {
         try { 
-            const response = await updateExistingRole(role); // Gantilah dengan fungsi update yang sesuai
+            const response = await updateExistingRole(roleuser); // Gantilah dengan fungsi update yang sesuai
             toast.current.show({ severity: 'success', summary: 'Updated', detail: response.message, life: 3000 });
         } catch (error) {
             console.error("Error updating data:", error);
@@ -137,22 +137,22 @@ const Inventory = () => {
         }
     };
 
-    const confirmDeleteRole = (role) => {
-        setRole(role);
+    const confirmDeleteRole = (roleuser) => {
+        setRole(roleuser);
         setDeleteRoleDialog(true);
     };
     
     const deleteRole = async () => {
         try {
-            await deleteRoleById(role.id); // Use the renamed function to delete by id
-            const _roles = roles.filter((val) => val.id !== role.id);
-            setRoles(_roles);
+            await deleteRoleById(roleuser.id); // Use the renamed function to delete by id
+            const _roleusers = roleusers.filter((val) => val.id !== roleuser.id);
+            setRoleUsers(_roleusers);
             setDeleteRoleDialog(false);
             setRole(emptyRole);
             toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Role Deleted', life: 3000 });
         } catch (error) {
-            console.error("Error deleting role:", error);
-            toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to delete role', life: 3000 });
+            console.error("Error deleting roleuser:", error);
+            toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to delete roleuser', life: 3000 });
         }
     };
     
@@ -161,21 +161,21 @@ const Inventory = () => {
     };
 
     const confirmDeleteSelected = () => {
-        setDeleteRolesDialog(true);
+        setDeleteRoleUsersDialog(true);
     };
 
-    const bulkDeleteSelectedRoles = async () => {
+    const bulkDeleteSelectedRoleUsers = async () => {
         try {
-            const selectedRoleIds = selectedRoles.map((role) => role.id);
-            await bulkDeleteRoles(selectedRoleIds);
-            const _roles = roles.filter((role) => !selectedRoleIds.includes(role.id));
-            setRoles(_roles);
-            setDeleteRolesDialog(false);
-            setSelectedRoles(null);
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Roles Deleted', life: 3000 });
+            const selectedRoleIds = selectedRoleUsers.map((roleuser) => roleuser.id);
+            await bulkDeleteRoleUsers(selectedRoleIds);
+            const _roleusers = roleusers.filter((roleuser) => !selectedRoleIds.includes(roleuser.id));
+            setRoleUsers(_roleusers);
+            setDeleteRoleUsersDialog(false);
+            setSelectedRoleUsers(null);
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'RoleUsers Deleted', life: 3000 });
         } catch (error) {
-            console.error("Error deleting roles:", error);
-            toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to delete roles', life: 3000 });
+            console.error("Error deleting roleusers:", error);
+            toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to delete roleusers', life: 3000 });
         }
     };    
 
@@ -184,7 +184,7 @@ const Inventory = () => {
             <React.Fragment>
                 <div className="my-2">
                     <Button label="New" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
-                    <Button label="Bulk Delete" icon="pi pi-trash" className="p-button-danger mr-2" onClick={confirmDeleteSelected} disabled={!selectedRoles || !selectedRoles.length} />
+                    <Button label="Bulk Delete" icon="pi pi-trash" className="p-button-danger mr-2" onClick={confirmDeleteSelected} disabled={!selectedRoleUsers || !selectedRoleUsers.length} />
             </div>
             </React.Fragment>
         );
@@ -199,16 +199,7 @@ const Inventory = () => {
         );
     };
 
-    const roleBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">ID</span>
-                {rowData.id}
-            </>
-        );
-    };
-
-    const nameBodyTemplate = (rowData) => {
+     const permissionidBodyTemplate = (rowData) => {
         return (
             <span
             style={{
@@ -218,12 +209,40 @@ const Inventory = () => {
             }}
             onClick={() => openEdit(rowData)}
         >
-            {rowData.role}
+            {rowData.permission_id}
         </span>
         );
     };
 
-    
+    const roleidBodyTemplate = (rowData) => {
+        return (
+            <span
+            style={{
+                cursor: 'pointer',
+                color: 'blue',
+                
+            }}
+            onClick={() => openEdit(rowData)}
+        >
+            {rowData.role_id}
+        </span>
+        );
+    };
+
+    const useridBodyTemplate = (rowData) => {
+        return (
+            <span
+            style={{
+                cursor: 'pointer',
+                color: 'blue',
+                
+            }}
+            onClick={() => openEdit(rowData)}
+        >
+            {rowData.user_id}
+        </span>
+        );
+    };    
 
     const handleNextPage = () => {
         setPaginationData(prev => {
@@ -249,7 +268,7 @@ const Inventory = () => {
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Manage Roles</h5>
+            <h5 className="m-0">Manage RoleUsers</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
@@ -263,10 +282,10 @@ const Inventory = () => {
             <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteRole} />
         </>
     );
-    const deleteRolesDialogFooter = (
+    const deleteRoleUsersDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteRolesDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={bulkDeleteSelectedRoles} />
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteRoleUsersDialog} />
+            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={bulkDeleteSelectedRoleUsers} />
 
         </>
     );
@@ -288,20 +307,21 @@ const Inventory = () => {
 
                     <DataTable
                        ref={dt}
-                       value={roles}
-                       selection={selectedRoles}
-                       onSelectionChange={(e) => setSelectedRoles(e.value)}
+                       value={roleusers}
+                       selection={selectedRoleUsers}
+                       onSelectionChange={(e) => setSelectedRoleUsers(e.value)}
                        dataKey="id"
                        className="datatable-responsive"
                        globalFilter={globalFilter}
-                       emptyMessage="No roles found."
+                       emptyMessage="No roleusers found."
                        header={header}
                        responsiveLayout="scroll"                   
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
                         <Column field="nomor" header="No" body={nomorBodyTemplate} style={{ width: '5%' }} />
-                        <Column field="id" header="ID" sortable body={roleBodyTemplate}></Column>
-                        <Column field="role" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="role id" header="role ID" sortable body={roleidBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="permission id" header="permission ID" sortable body={permissionidBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="user id" header="user ID" sortable body={useridBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         <Column field="action" body={actionBodyTemplate} ></Column>
                     </DataTable>
 
@@ -310,7 +330,7 @@ const Inventory = () => {
                         <Button icon="pi pi-angle-left" className="p-button-text" onClick={handlePreviousPage} disabled={paginationData.page === 1} />
                         <span>{`Page ${paginationData.page} of ${paginationData.totalPages }`}</span>
                         <Button icon="pi pi-angle-right" className="p-button-text" onClick={handleNextPage} disabled={paginationData.page === paginationData.totalPages} />
-                        <span>{`Inventory ${paginationData.totalRows } Roles`}</span>
+                        <span>{`Inventory ${paginationData.totalRows } RoleUsers`}</span>
                     </div>
                                 <Dropdown
                         value={rowsPerPage}
@@ -322,7 +342,7 @@ const Inventory = () => {
                 </div>              
                         <RoleCreateDialog
                         visible={roleDialog}
-                        role={role}
+                        roleuser={roleuser}
                         setRole={setRole}
                         hideDialog={hideDialog}
                         saveRole={saveRole}
@@ -330,7 +350,7 @@ const Inventory = () => {
                         />
                          <RoleUpdateDialog
                             visible={roleUpdateDialog}
-                            role={role}
+                            roleuser={roleuser}
                             setRole={setRole}
                             hideDialog={hideUpdateDialog}
                             updateRole={updateRole}
@@ -340,18 +360,18 @@ const Inventory = () => {
                     <Dialog visible={deleteRoleDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteRoleDialogFooter} onHide={hideDeleteRoleDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {role && (
+                            {roleuser && (
                                 <span>
-                                    Are you sure you want to delete <b>{role.role}</b>?
+                                    Are you sure you want to delete <b>{roleuser.roleuser}</b>?
                                 </span>
                             )}
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteRolesDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteRolesDialogFooter} onHide={hideDeleteRolesDialog}>
+                    <Dialog visible={deleteRoleUsersDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteRoleUsersDialogFooter} onHide={hideDeleteRoleUsersDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {role && <span>Are you sure you want to delete the selected roles?</span>}
+                            {roleuser && <span>Are you sure you want to delete the selected roleusers?</span>}
                         </div>
                     </Dialog>
                 </div>

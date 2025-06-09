@@ -47,14 +47,14 @@ const LandingPage = () => {
                             </li>
                             
                         </ul>
-                        <div className="flex justify-content-between lg:block border-top-1 lg:border-top-none surface-border py-3 lg:py-0 mt-3 lg:mt-0">
+                        {/* <div className="flex justify-content-between lg:block border-top-1 lg:border-top-none surface-border py-3 lg:py-0 mt-3 lg:mt-0">
                         <Link href="/accounts/tap/login">
                             <Button label="Sign In" className="p-button-text p-button-rounded border-none font-light line-height-2 text-blue-500"></Button>
                           </Link>  
                           <Link href="/accounts/tap/register">
                             <Button label="TRY FOR FREE" className="p-button-rounded border-none ml-5 font-light line-height-2 bg-blue-500 text-white"></Button>
                         </Link>  
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
